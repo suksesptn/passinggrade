@@ -2,167 +2,35 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Search Engine Passing Grade</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-        }
-        body {
-            background: #f0f4f8;
-            margin: 0;
-            padding: 24px;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            padding: 24px 28px;
-        }
-        h1 {
-            font-size: 1.8rem;
-            color: #1e3a5f;
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
-        .sub {
-            color: #2c3e66;
-            margin-bottom: 28px;
-            border-left: 4px solid #2c7da0;
-            padding-left: 16px;
-        }
-        .filter-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 28px;
-            background: #f9fafc;
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .filter-group {
-            flex: 1;
-            min-width: 180px;
-        }
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 8px;
-            color: #0b3b5f;
-        }
-        input, select, button {
-            padding: 10px 14px;
-            border-radius: 14px;
-            border: 1px solid #ccd7e6;
-            width: 100%;
-            font-size: 0.95rem;
-            background: white;
-        }
-        button {
-            background: #1e6f5c;
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover {
-            background: #0e5a49;
-        }
-        .btn-secondary {
-            background: #2c7da0;
-            margin-top: 8px;
-        }
-        .btn-secondary:hover {
-            background: #1f5e7a;
-        }
-        .ptn-multiselect {
-            border: 1px solid #ccd7e6;
-            border-radius: 14px;
-            padding: 8px;
-            max-height: 140px;
-            overflow-y: auto;
-            background: white;
-        }
-        .ptn-multiselect label {
-            font-weight: normal;
-            margin-bottom: 4px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .ptn-multiselect input {
-            width: auto;
-            margin-right: 6px;
-        }
-        .autocomplete-suggestions {
-            background: white;
-            border: 1px solid #ccc;
-            max-height: 200px;
-            overflow-y: auto;
-            position: absolute;
-            width: calc(100% - 2px);
-            z-index: 100;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .suggestion-item {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-        .suggestion-item:hover {
-            background: #e9f0f5;
-        }
-        .relative {
-            position: relative;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.85rem;
-        }
-        th, td {
-            border: 1px solid #dce5ef;
-            padding: 12px 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background: #eef2f7;
-            position: sticky;
-            top: 0;
-        }
-        .recommendation-box {
-            background: #eef6f0;
-            border-left: 5px solid #2c7a47;
-            padding: 14px 18px;
-            border-radius: 18px;
-            margin-top: 20px;
-        }
-        .badge {
-            background: #1e3a5f;
-            color: white;
-            border-radius: 40px;
-            padding: 2px 10px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: inline-block;
-        }
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #5e6f8d;
-        }
-        @media (max-width: 700px) {
-            .container { padding: 16px; }
-            .filter-grid { flex-direction: column; }
-        }
+        * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+        body { background: #eef2f7; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 28px; padding: 24px 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.8rem; color: #1e3a5f; margin-top: 0; }
+        .sub { color: #2c3e66; margin-bottom: 28px; border-left: 4px solid #2c7da0; padding-left: 16px; }
+        .filter-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 28px; background: #f9fafc; padding: 20px; border-radius: 20px; }
+        .filter-group { flex: 1; min-width: 180px; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; color: #0b3b5f; }
+        input, select, button { padding: 10px 14px; border-radius: 14px; border: 1px solid #ccd7e6; width: 100%; font-size: 0.95rem; background: white; }
+        button { background: #1e6f5c; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0e5a49; }
+        .btn-secondary { background: #2c7da0; margin-top: 8px; }
+        .ptn-multiselect { border: 1px solid #ccd7e6; border-radius: 14px; padding: 8px; max-height: 160px; overflow-y: auto; background: white; }
+        .ptn-multiselect label { font-weight: normal; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .autocomplete-suggestions { background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; position: absolute; width: calc(100% - 2px); z-index: 100; border-radius: 12px; }
+        .suggestion-item { padding: 8px 12px; cursor: pointer; }
+        .suggestion-item:hover { background: #e9f0f5; }
+        .relative { position: relative; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th, td { border: 1px solid #dce5ef; padding: 10px 8px; text-align: left; vertical-align: top; }
+        th { background: #eef2f7; position: sticky; top: 0; }
+        .recommendation-box { background: #eef6f0; border-left: 5px solid #2c7a47; padding: 14px 18px; border-radius: 18px; margin-top: 20px; }
+        .badge { background: #1e3a5f; color: white; border-radius: 40px; padding: 2px 10px; font-size: 0.7rem; display: inline-block; }
+        .error-msg { color: #c0392b; background: #fbe9e7; padding: 12px; border-radius: 16px; margin-top: 16px; }
+        footer { margin-top: 30px; text-align: center; font-size: 0.8rem; color: #5e6f8d; }
+        @media (max-width: 700px) { .container { padding: 16px; } .filter-grid { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -187,7 +55,7 @@
         <div class="filter-group">
             <label>🏫 Pilih PTN (bisa lebih dari satu)</label>
             <div id="ptnCheckboxes" class="ptn-multiselect">
-                <div style="padding: 6px; text-align: center;">Memuat daftar PTN...</div>
+                <div style="padding: 8px;">Memuat daftar PTN...</div>
             </div>
             <button type="button" id="selectAllPtn" class="btn-secondary" style="margin-top: 8px;">✓ Pilih Semua PTN</button>
             <button type="button" id="clearPtn" style="background:#b0c4de; color:#1e3a5f; margin-top:4px;">✖ Hapus Pilihan</button>
@@ -208,24 +76,23 @@
         <span id="recommendationText"></span>
     </div>
 
+    <div id="errorMessage" class="error-msg" style="display: none;"></div>
+
     <div style="overflow-x: auto;">
         <table id="resultTable">
-            <thead>
-                <tr><th>NO</th><th>PROGRAM STUDI</th><th>JENJANG</th><th>PTN</th><th>PASSING GRADE</th></tr>
-            </thead>
-            <tbody id="tableBody">
-                <tr><td colspan="5" style="text-align:center;">Silakan atur filter dan klik Cari</td></tr>
-            </tbody>
+            <thead><tr><th>NO</th><th>PROGRAM STUDI</th><th>JENJANG</th><th>PTN</th><th>PASSING GRADE</th></tr></thead>
+            <tbody id="tableBody"><tr><td colspan="5" style="text-align:center;">Silakan atur filter dan klik Cari</td></tr></tbody>
         </table>
     </div>
     <footer>Data passing grade berdasarkan kumpulan PTN & prodi • Rekomendasi rumpun: Kedokteran, Teknik, Kesehatan, dll.</footer>
 </div>
 
 <script>
-    // === KONFIGURASI ===
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyNqmG441yHb3YQo0sHn9omCcfM-vFw1gCMKNzeDZ9MpnOjn4o9TnLc0HriASrcg534pw/exec"; // GANTI DENGAN URL ANDA
+    // ======================== KONFIGURASI ========================
+    // GANTI DENGAN URL APPS SCRIPT YANG SUDAH DIPUBLIKASIKAN
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw61v_mRPXItl3gBlK_ET3W5jkD-55sj9Jg23qOsUef6fRxvanXBXKWdQVrSyQXCIUC/exec";
     
-    // Data rumpun program studi (berdasarkan kata kunci)
+    // ======================== RUMPUN (sama seperti sebelumnya) ========================
     const RUMPUN = [
         { name: "Kedokteran & Kedokteran Gigi", keywords: ["kedokteran", "dokter", "kedokteran gigi", "dokter gigi", "pendidikan dokter"] },
         { name: "Kesehatan Masyarakat & Lingkungan", keywords: ["kesehatan masyarakat", "kesehatan lingkungan", "promosi kesehatan", "keselamatan kesehatan kerja", "k3"] },
@@ -258,10 +125,10 @@
     
     // Global state
     let allPTNs = [];
-    let currentProdiList = [];     // daftar prodi berdasarkan PTN terpilih
-    let allDataCache = null;       // untuk keperluan rekomendasi rumpun (ambil dari API)
+    let currentProdiList = [];
+    let allDataCache = null;
     
-    // Elemen DOM
+    // DOM elements
     const ptnContainer = document.getElementById("ptnCheckboxes");
     const prodiInput = document.getElementById("prodiInput");
     const prodiSuggestions = document.getElementById("prodiSuggestions");
@@ -273,30 +140,55 @@
     const tableBody = document.getElementById("tableBody");
     const recommendationPanel = document.getElementById("recommendationPanel");
     const recommendationText = document.getElementById("recommendationText");
+    const errorDiv = document.getElementById("errorMessage");
     
-    // Helper: muat data PTN dari backend
+    function showError(msg) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = `⚠️ ${msg}`;
+        setTimeout(() => { errorDiv.style.display = "none"; }, 6000);
+    }
+    
+    // Helper: fetch dengan timeout
+    async function fetchJSON(url, options = {}) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+            const response = await fetch(url, { ...options, signal: controller.signal });
+            clearTimeout(timeout);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } catch (err) {
+            clearTimeout(timeout);
+            throw err;
+        }
+    }
+    
+    // Muat PTN
     async function loadPTNs() {
         try {
-            const response = await fetch(`${WEB_APP_URL}?action=getPTN`);
-            const ptns = await response.json();
+            ptnContainer.innerHTML = "<div>Memuat PTN...</div>";
+            const url = `${WEB_APP_URL}?action=getPTN&t=${Date.now()}`;
+            const ptns = await fetchJSON(url);
+            if (!Array.isArray(ptns)) throw new Error("Respons bukan array");
             allPTNs = ptns;
             renderPTNCheckboxes(allPTNs);
-        } catch(e) {
-            console.error("Gagal load PTN", e);
-            ptnContainer.innerHTML = "<div style='color:red'>Gagal memuat PTN. Periksa URL Apps Script.</div>";
+            // Setelah PTN termuat, ambil juga allData untuk rekomendasi
+            loadAllDataForRecommendation();
+        } catch (e) {
+            console.error("Gagal load PTN:", e);
+            ptnContainer.innerHTML = `<div style="color:red;">Gagal memuat PTN. Cek URL Apps Script atau deployment.<br>Detail: ${e.message}</div>`;
+            showError("Tidak bisa terhubung ke server. Pastikan Apps Script sudah di-deploy dengan akses publik.");
         }
     }
     
     function renderPTNCheckboxes(ptns) {
-        ptnContainer.innerHTML = "";
         if (!ptns.length) {
             ptnContainer.innerHTML = "<div>Tidak ada PTN</div>";
             return;
         }
+        ptnContainer.innerHTML = "";
         ptns.forEach(ptn => {
             const label = document.createElement("label");
-            label.style.display = "flex";
-            label.style.alignItems = "center";
             const cb = document.createElement("input");
             cb.type = "checkbox";
             cb.value = ptn;
@@ -305,11 +197,11 @@
             label.appendChild(document.createTextNode(ptn));
             ptnContainer.appendChild(label);
         });
-        // Setelah checkbox di-render, tambahkan event untuk update daftar prodi
+        // Event listener untuk setiap checkbox
         document.querySelectorAll(".ptn-checkbox").forEach(cb => {
             cb.addEventListener("change", updateProdiListBySelectedPTN);
         });
-        // default: semua PTN terpilih? Tidak, biarkan kosong, tapi kita bisa trigger update prodi
+        // Tidak perlu auto-select semua, biarkan user memilih
         updateProdiListBySelectedPTN();
     }
     
@@ -321,21 +213,29 @@
     async function updateProdiListBySelectedPTN() {
         const selected = getSelectedPTNs();
         try {
-            let url = `${WEB_APP_URL}?action=getProdi`;
+            let url = `${WEB_APP_URL}?action=getProdi&t=${Date.now()}`;
             if (selected.length > 0) {
                 url += `&ptns=${encodeURIComponent(JSON.stringify(selected))}`;
             }
-            const response = await fetch(url);
-            const prodiArray = await response.json();
+            const prodiArray = await fetchJSON(url);
             currentProdiList = prodiArray;
-            // Tidak mengubah input suggestion langsung, nanti autocomplete pakai currentProdiList
-        } catch(e) {
-            console.error("Gagal load prodi", e);
+        } catch (e) {
+            console.error("Gagal load prodi:", e);
             currentProdiList = [];
         }
     }
     
-    // Autocomplete program studi
+    async function loadAllDataForRecommendation() {
+        try {
+            const url = `${WEB_APP_URL}?action=getAllData&t=${Date.now()}`;
+            const data = await fetchJSON(url);
+            if (Array.isArray(data)) allDataCache = data;
+        } catch (e) {
+            console.warn("Tidak bisa mengambil data untuk rekomendasi:", e);
+        }
+    }
+    
+    // Autocomplete prodi
     prodiInput.addEventListener("input", function(e) {
         const query = e.target.value.toLowerCase().trim();
         if (!query) {
@@ -355,7 +255,6 @@
             div.onclick = () => {
                 prodiInput.value = prodi;
                 prodiSuggestions.style.display = "none";
-                // setelah pilih prodi, langsung generate rekomendasi rumpun
                 generateRecommendation(prodi);
             };
             prodiSuggestions.appendChild(div);
@@ -364,25 +263,16 @@
     });
     
     document.addEventListener("click", function(e) {
-        if (!prodiSuggestions.contains(e.target) && e.target !== prodiInput) {
+        if (prodiSuggestions && !prodiSuggestions.contains(e.target) && e.target !== prodiInput) {
             prodiSuggestions.style.display = "none";
         }
     });
     
-    // Fungsi rekomendasi rumpun
     async function generateRecommendation(selectedProdi) {
-        if (!selectedProdi) {
+        if (!selectedProdi || !allDataCache) {
             recommendationPanel.style.display = "none";
             return;
         }
-        // butuh data semua program studi (cache) untuk mencari yang serumpun
-        if (!allDataCache) {
-            try {
-                const res = await fetch(`${WEB_APP_URL}?action=getAllData`);
-                allDataCache = await res.json();
-            } catch(e) { console.error(e); return; }
-        }
-        // Tentukan rumpun dari selectedProdi
         let matchedRumpun = null;
         for (let r of RUMPUN) {
             if (r.keywords.some(kw => selectedProdi.toLowerCase().includes(kw.toLowerCase()))) {
@@ -394,7 +284,6 @@
             recommendationPanel.style.display = "none";
             return;
         }
-        // Cari prodi lain dalam rumpun yang sama (exclude selectedProdi)
         const sameRumpunProdi = allDataCache.filter(item => {
             if (item.programStudi.toLowerCase() === selectedProdi.toLowerCase()) return false;
             return matchedRumpun.keywords.some(kw => item.programStudi.toLowerCase().includes(kw.toLowerCase()));
@@ -403,42 +292,34 @@
             recommendationPanel.style.display = "none";
             return;
         }
-        // Tampilkan rekomendasi (maks 10)
         const recList = sameRumpunProdi.slice(0, 10).map(p => `${p.programStudi} (${p.ptn} - ${p.passingGrade})`).join(";  ");
         recommendationText.innerHTML = `<strong>Rumpun: ${matchedRumpun.name}</strong><br>📌 ${recList}`;
         recommendationPanel.style.display = "block";
     }
     
-    // Pencarian data utama
     async function performSearch() {
         const skor = parseFloat(skorInput.value);
         const jenjang = jenjangSelect.value;
         const selectedPTNs = getSelectedPTNs();
         const prodi = prodiInput.value.trim();
         
-        // Validasi skor
         if (isNaN(skor)) {
             alert("Masukkan skor tryout terlebih dahulu.");
             return;
         }
         
-        const params = new URLSearchParams();
-        params.append("action", "search");
-        params.append("skor", skor);
-        params.append("jenjang", jenjang);
-        if (selectedPTNs.length) params.append("ptns", JSON.stringify(selectedPTNs));
-        if (prodi) params.append("prodi", prodi);
-        
         try {
-            const response = await fetch(`${WEB_APP_URL}?${params.toString()}`);
-            const results = await response.json();
+            let url = `${WEB_APP_URL}?action=search&skor=${skor}&jenjang=${jenjang}&t=${Date.now()}`;
+            if (selectedPTNs.length) url += `&ptns=${encodeURIComponent(JSON.stringify(selectedPTNs))}`;
+            if (prodi) url += `&prodi=${encodeURIComponent(prodi)}`;
+            const results = await fetchJSON(url);
             renderTable(results);
-            // jika prodi spesifik, rekomendasi sudah ditrigger dari autocomplete, tapi kita juga panggil
             if (prodi) generateRecommendation(prodi);
             else recommendationPanel.style.display = "none";
-        } catch(e) {
-            console.error(e);
-            tableBody.innerHTML = '<tr><td colspan="5">Terjadi kesalahan saat mengambil data.</td></tr>';
+        } catch (e) {
+            console.error("Search error:", e);
+            tableBody.innerHTML = `<tr><td colspan="5">Terjadi kesalahan: ${e.message}</td></tr>`;
+            showError("Gagal mengambil data pencarian. Periksa koneksi atau backend.");
         }
     }
     
@@ -483,8 +364,6 @@
     
     // Inisialisasi
     loadPTNs();
-    // Preload data semua prodi untuk rekomendasi
-    fetch(`${WEB_APP_URL}?action=getAllData`).then(res => res.json()).then(data => allDataCache = data).catch(e=>console.warn);
 </script>
 </body>
 </html>
