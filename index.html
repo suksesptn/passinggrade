@@ -3,356 +3,1916 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Engine Passing Grade</title>
+    <title>Eksplorasi Passing Grade SNBT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
-        body { background: #eef2f7; margin: 0; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 28px; padding: 24px 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        h1 { font-size: 1.8rem; color: #1e3a5f; margin-top: 0; }
-        .sub { color: #2c3e66; margin-bottom: 28px; border-left: 4px solid #2c7da0; padding-left: 16px; }
-        .filter-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 28px; background: #f9fafc; padding: 20px; border-radius: 20px; }
-        .filter-group { flex: 1; min-width: 180px; }
-        label { font-weight: 600; display: block; margin-bottom: 8px; color: #0b3b5f; }
-        input, select, button { padding: 10px 14px; border-radius: 14px; border: 1px solid #ccd7e6; width: 100%; font-size: 0.95rem; background: white; }
-        button { background: #1e6f5c; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #0e5a49; }
-        .btn-secondary { background: #2c7da0; margin-top: 8px; }
-        .ptn-multiselect { border: 1px solid #ccd7e6; border-radius: 14px; padding: 8px; max-height: 160px; overflow-y: auto; background: white; }
-        .ptn-multiselect label { font-weight: normal; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
-        .autocomplete-suggestions { background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; position: absolute; width: calc(100% - 2px); z-index: 100; border-radius: 12px; }
-        .suggestion-item { padding: 8px 12px; cursor: pointer; }
-        .suggestion-item:hover { background: #e9f0f5; }
-        .relative { position: relative; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
-        th, td { border: 1px solid #dce5ef; padding: 10px 8px; text-align: left; vertical-align: top; }
-        th { background: #eef2f7; position: sticky; top: 0; }
-        .recommendation-box { background: #eef6f0; border-left: 5px solid #2c7a47; padding: 14px 18px; border-radius: 18px; margin-top: 20px; }
-        .error-msg { background: #fbe9e7; color: #c0392b; padding: 12px; border-radius: 16px; margin-top: 16px; }
-        footer { margin-top: 30px; text-align: center; font-size: 0.8rem; color: #5e6f8d; }
-        @media (max-width: 700px) { .container { padding: 16px; } .filter-grid { flex-direction: column; } }
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Pewarnaan Badge 12 Rumpun Spesifik */
+        .badge-medis { background: #dcfce7; color: #15803d; border-color: #86efac; }
+        .badge-sains { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+        .badge-it { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+        .badge-infra { background: #e2e8f0; color: #334155; border-color: #cbd5e1; }
+        .badge-mesin { background: #ffedd5; color: #9a3412; border-color: #fdba74; }
+        .badge-bumi { background: #fef08a; color: #854d0e; border-color: #fde047; }
+        .badge-agro { background: #d9f99d; color: #4d7c0f; border-color: #bef264; }
+        .badge-ekbis { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+        .badge-soshum { background: #fae8ff; color: #a21caf; border-color: #f0abfc; }
+        .badge-bahasa { background: #fce7f3; color: #be185d; border-color: #fbcfe8; }
+        .badge-seni { background: #ffe4e6; color: #be123c; border-color: #fda4af; }
+        .badge-pendidikan { background: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
     </style>
 </head>
-<body>
-<div class="container">
-    <h1>🎓 Cari PTN & Program Studi</h1>
-    <div class="sub">Cocokkan skor tryout dengan passing grade • Rekomendasi program studis</div>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-800">
 
-    <div class="filter-grid">
-        <div class="filter-group">
-            <label>📊 Skor Tryout</label>
-            <input type="number" id="skorTryout" placeholder="Contoh: 680" step="0.01">
-        </div>
-        <div class="filter-group">
-            <label>🎓 Jenjang</label>
-            <select id="jenjang">
-                <option value="semua">Semua Jenjang</option>
-                <option value="S1">S1</option>
-                <option value="D4">D4</option>
-                <option value="D3">D3</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label>🏫 Pilih PTN (bisa lebih dari satu)</label>
-            <div id="ptnCheckboxes" class="ptn-multiselect">
-                <div style="padding: 8px;">Memuat daftar PTN...</div>
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-slate-100">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 border border-slate-100">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    🔒
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-800">Akses Terbatas</h2>
+                <p class="text-sm text-slate-500 mt-2">Sistem ini memuat data internal passing grade. Masukkan kata sandi untuk melanjutkan.</p>
             </div>
-            <button type="button" id="selectAllPtn" class="btn-secondary" style="margin-top: 8px;">✓ Pilih Semua PTN</button>
-            <button type="button" id="clearPtn" style="background:#b0c4de; color:#1e3a5f; margin-top:4px;">✖ Hapus Pilihan</button>
-        </div>
-        <div class="filter-group relative">
-            <label>📚 Program Studi (autocomplete)</label>
-            <input type="text" id="prodiInput" placeholder="Ketik nama prodi" autocomplete="off">
-            <div id="prodiSuggestions" class="autocomplete-suggestions" style="display:none;"></div>
-        </div>
-        <div class="filter-group">
-            <label>&nbsp;</label>
-            <button id="searchBtn">🔍 Cari Rekomendasi</button>
+            
+            <form id="loginForm">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Kata Sandi</label>
+                    <input type="password" id="passwordInput" required placeholder="••••••••" 
+                           class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition tracking-widest text-center">
+                    <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden font-medium text-center">❌ Kata sandi tidak tepat.</p>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md">
+                    Buka Sistem
+                </button>
+            </form>
         </div>
     </div>
 
-    <div id="recommendationPanel" class="recommendation-box" style="display: none;">
-        <strong>🧠 Rekomendasi program studi serumpun</strong><br>
-        <span id="recommendationText"></span>
-    </div>
-
-    <div id="errorMessage" class="error-msg" style="display: none;"></div>
-
-    <div style="overflow-x: auto;">
-        <table id="resultTable">
-            <thead><tr><th>NO</th><th>PROGRAM STUDI</th><th>JENJANG</th><th>PTN</th><th>PASSING GRADE</th></tr></thead>
-            <tbody id="tableBody"><tr><td colspan="5" style="text-align:center;">Silakan atur filter dan klik Cari</td></tr></tbody>
-        </table>
-    </div>
-    <footer>Data passing grade berdasarkan kumpulan PTN & prodi • Rekomendasi rumpun: Kedokteran, Teknik, Kesehatan, dll.</footer>
-</div>
-
-<script>
-    // GANTI DENGAN URL APPS SCRIPT ANDA
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzOARuPAiqBq8qRnnAPyFquNgV0trKCYtn63gU71aeIY14Y8B7w5TbYq8sHDMmLcNOBnw/exec";
-    
-    // Rumpun program studi (sama seperti sebelumnya)
-    const RUMPUN = [
-        { name: "Kedokteran & Kedokteran Gigi", keywords: ["kedokteran", "dokter", "kedokteran gigi", "dokter gigi", "pendidikan dokter"] },
-        { name: "Kesehatan Masyarakat & Lingkungan", keywords: ["kesehatan masyarakat", "kesehatan lingkungan", "promosi kesehatan", "keselamatan kesehatan kerja", "k3"] },
-        { name: "Farmasi", keywords: ["farmasi", "sekolah farmasi"] },
-        { name: "Keperawatan & Kebidanan", keywords: ["keperawatan", "kebidanan", "paramedik", "terapi gigi", "higiene gigi"] },
-        { name: "Gizi & Dietetika", keywords: ["gizi", "ilmu gizi", "nutrisi"] },
-        { name: "Fisioterapi & Terapi", keywords: ["fisioterapi", "terapi okupasi", "okupasi terapi"] },
-        { name: "Kedokteran Hewan", keywords: ["kedokteran hewan", "veteriner", "paramedik veteriner"] },
-        { name: "Teknik Sipil & Lingkungan", keywords: ["teknik sipil", "infrastruktur sipil", "teknik lingkungan", "sumber daya air", "konstruksi gedung", "jalan jembatan"] },
-        { name: "Teknik Elektro & Elektronika", keywords: ["teknik elektro", "elektronika", "telekomunikasi", "teknik listrik", "otomasi", "mekatronika"] },
-        { name: "Teknik Mesin & Manufaktur", keywords: ["teknik mesin", "manufaktur", "rekayasa mesin", "pemeliharaan mesin", "pendingin", "konversi energi"] },
-        { name: "Teknik Kimia & Bioproses", keywords: ["teknik kimia", "bioproses", "teknologi bioproses"] },
-        { name: "Teknik Industri & Manajemen Rekayasa", keywords: ["teknik industri", "manajemen industri", "manajemen teknologi rekayasa", "teknik logistik"] },
-        { name: "Teknik Informatika & Ilmu Komputer", keywords: ["teknik informatika", "informatika", "ilmu komputer", "sistem informasi", "teknologi informasi", "sains data", "data science", "rekayasa perangkat lunak", "bisnis digital", "manajemen informatika"] },
-        { name: "Arsitektur & Perencanaan Wilayah", keywords: ["arsitektur", "arsitektur interior", "arsitektur lanskap", "perencanaan wilayah kota", "pwk", "desain interior"] },
-        { name: "Teknik Geologi & Pertambangan", keywords: ["teknik geologi", "pertambangan", "perminyakan", "geofisika", "metalurgi", "geomatika", "geodesi"] },
-        { name: "Pertanian & Agribisnis", keywords: ["agroteknologi", "agroekoteknologi", "agribisnis", "agronomi", "ilmu tanah", "proteksi tanaman", "penyuluhan pertanian", "teknik pertanian", "smart agriculture"] },
-        { name: "Peternakan", keywords: ["peternakan", "nutrisi ternak", "teknologi produksi ternak"] },
-        { name: "Perikanan & Ilmu Kelautan", keywords: ["perikanan", "budidaya perairan", "akuakultur", "teknologi hasil perikanan", "ilmu kelautan", "sumberdaya perairan"] },
-        { name: "Ekonomi & Pembangunan", keywords: ["ekonomi pembangunan", "ilmu ekonomi", "ekonomi syariah", "ekonomi islam", "iesp"] },
-        { name: "Manajemen & Bisnis", keywords: ["manajemen", "bisnis", "kewirausahaan", "administrasi bisnis", "bisnis internasional", "bisnis kreatif"] },
-        { name: "Akuntansi & Perpajakan", keywords: ["akuntansi", "perpajakan", "akuntansi perpajakan", "keuangan syariah"] },
-        { name: "Hukum", keywords: ["hukum", "ilmu hukum", "hukum administrasi negara"] },
-        { name: "Psikologi", keywords: ["psikologi", "ilmu psikologi"] },
-        { name: "Pendidikan", keywords: ["pendidikan", "pgSD", "paud", "bimbingan konseling", "teknologi pendidikan", "pendidikan jasmani", "kepelatihan olahraga"] },
-        { name: "Bahasa & Sastra", keywords: ["sastra", "bahasa", "linguistik", "sastra indonesia", "sastra inggris", "sastra jepang", "sastra arab"] },
-        { name: "Seni & Desain", keywords: ["seni rupa", "desain komunikasi visual", "seni musik", "seni tari", "teater", "kriya", "animasi", "tata rias", "tata busana"] },
-        { name: "Pariwisata & Perhotelan", keywords: ["pariwisata", "perhotelan", "destinasi pariwisata", "usaha perjalanan wisata"] }
-    ];
-    
-    let allPTNs = [];
-    let currentProdiList = [];
-    let allDataCache = null;
-    
-    // DOM elements
-    const ptnContainer = document.getElementById("ptnCheckboxes");
-    const prodiInput = document.getElementById("prodiInput");
-    const prodiSuggestions = document.getElementById("prodiSuggestions");
-    const searchBtn = document.getElementById("searchBtn");
-    const skorInput = document.getElementById("skorTryout");
-    const jenjangSelect = document.getElementById("jenjang");
-    const selectAllBtn = document.getElementById("selectAllPtn");
-    const clearPtnBtn = document.getElementById("clearPtn");
-    const tableBody = document.getElementById("tableBody");
-    const recommendationPanel = document.getElementById("recommendationPanel");
-    const recommendationText = document.getElementById("recommendationText");
-    const errorDiv = document.getElementById("errorMessage");
-    
-    function showError(msg) {
-        errorDiv.style.display = "block";
-        errorDiv.innerHTML = `⚠️ ${msg}`;
-        setTimeout(() => { errorDiv.style.display = "none"; }, 6000);
-    }
-    
-    async function fetchJSON(url) {
-        const response = await fetch(url, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-store',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        if (data.error) throw new Error(data.error);
-        return data;
-    }
-    
-    async function loadPTNs() {
-        try {
-            ptnContainer.innerHTML = "<div>Memuat PTN...</div>";
-            const url = `${WEB_APP_URL}?action=getPTN&_=${Date.now()}`;
-            const ptns = await fetchJSON(url);
-            if (!Array.isArray(ptns)) throw new Error("Respons bukan array");
-            allPTNs = ptns;
-            renderPTNCheckboxes(allPTNs);
-            loadAllDataForRecommendation();
-        } catch (e) {
-            console.error(e);
-            ptnContainer.innerHTML = `<div style="color:red;">Gagal memuat PTN: ${e.message}</div>`;
-            showError(`Tidak bisa terhubung ke server. Pastikan Apps Script sudah di-deploy dengan akses publik. Detail: ${e.message}`);
-        }
-    }
-    
-    function renderPTNCheckboxes(ptns) {
-        if (!ptns.length) {
-            ptnContainer.innerHTML = "<div>Tidak ada PTN</div>";
-            return;
-        }
-        ptnContainer.innerHTML = "";
-        ptns.forEach(ptn => {
-            const label = document.createElement("label");
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.value = ptn;
-            cb.className = "ptn-checkbox";
-            label.appendChild(cb);
-            label.appendChild(document.createTextNode(ptn));
-            ptnContainer.appendChild(label);
-        });
-        document.querySelectorAll(".ptn-checkbox").forEach(cb => {
-            cb.addEventListener("change", updateProdiListBySelectedPTN);
-        });
-        updateProdiListBySelectedPTN();
-    }
-    
-    function getSelectedPTNs() {
-        const checkboxes = document.querySelectorAll(".ptn-checkbox:checked");
-        return Array.from(checkboxes).map(cb => cb.value);
-    }
-    
-    async function updateProdiListBySelectedPTN() {
-        const selected = getSelectedPTNs();
-        try {
-            let url = `${WEB_APP_URL}?action=getProdi&_=${Date.now()}`;
-            if (selected.length > 0) {
-                url += `&ptns=${encodeURIComponent(JSON.stringify(selected))}`;
-            }
-            const prodiArray = await fetchJSON(url);
-            currentProdiList = prodiArray;
-        } catch (e) {
-            console.error("Gagal load prodi:", e);
-            currentProdiList = [];
-        }
-    }
-    
-    async function loadAllDataForRecommendation() {
-        try {
-            const url = `${WEB_APP_URL}?action=getAllData&_=${Date.now()}`;
-            const data = await fetchJSON(url);
-            if (Array.isArray(data)) allDataCache = data;
-        } catch (e) {
-            console.warn("Tidak bisa ambil data rekomendasi:", e);
-        }
-    }
-    
-    // Autocomplete
-    prodiInput.addEventListener("input", function(e) {
-        const query = e.target.value.toLowerCase().trim();
-        if (!query) {
-            prodiSuggestions.style.display = "none";
-            return;
-        }
-        const filtered = currentProdiList.filter(prodi => prodi.toLowerCase().includes(query));
-        if (filtered.length === 0) {
-            prodiSuggestions.style.display = "none";
-            return;
-        }
-        prodiSuggestions.innerHTML = "";
-        filtered.slice(0, 12).forEach(prodi => {
-            const div = document.createElement("div");
-            div.className = "suggestion-item";
-            div.textContent = prodi;
-            div.onclick = () => {
-                prodiInput.value = prodi;
-                prodiSuggestions.style.display = "none";
-                generateRecommendation(prodi);
-            };
-            prodiSuggestions.appendChild(div);
-        });
-        prodiSuggestions.style.display = "block";
-    });
-    
-    document.addEventListener("click", function(e) {
-        if (prodiSuggestions && !prodiSuggestions.contains(e.target) && e.target !== prodiInput) {
-            prodiSuggestions.style.display = "none";
-        }
-    });
-    
-    async function generateRecommendation(selectedProdi) {
-        if (!selectedProdi || !allDataCache) {
-            recommendationPanel.style.display = "none";
-            return;
-        }
-        let matchedRumpun = null;
-        for (let r of RUMPUN) {
-            if (r.keywords.some(kw => selectedProdi.toLowerCase().includes(kw.toLowerCase()))) {
-                matchedRumpun = r;
-                break;
-            }
-        }
-        if (!matchedRumpun) {
-            recommendationPanel.style.display = "none";
-            return;
-        }
-        const sameRumpunProdi = allDataCache.filter(item => {
-            if (item.programStudi.toLowerCase() === selectedProdi.toLowerCase()) return false;
-            return matchedRumpun.keywords.some(kw => item.programStudi.toLowerCase().includes(kw.toLowerCase()));
-        });
-        if (sameRumpunProdi.length === 0) {
-            recommendationPanel.style.display = "none";
-            return;
-        }
-        const recList = sameRumpunProdi.slice(0, 10).map(p => `${p.programStudi} (${p.ptn} - ${p.passingGrade})`).join(";  ");
-        recommendationText.innerHTML = `<strong>Rumpun: ${matchedRumpun.name}</strong><br>📌 ${recList}`;
-        recommendationPanel.style.display = "block";
-    }
-    
-    async function performSearch() {
-        const skor = parseFloat(skorInput.value);
-        const jenjang = jenjangSelect.value;
-        const selectedPTNs = getSelectedPTNs();
-        const prodi = prodiInput.value.trim();
+    <div id="appContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
         
-        if (isNaN(skor)) {
-            alert("Masukkan skor tryout terlebih dahulu.");
-            return;
-        }
-        
-        try {
-            let url = `${WEB_APP_URL}?action=search&skor=${skor}&jenjang=${jenjang}&_=${Date.now()}`;
-            if (selectedPTNs.length) url += `&ptns=${encodeURIComponent(JSON.stringify(selectedPTNs))}`;
-            if (prodi) url += `&prodi=${encodeURIComponent(prodi)}`;
-            const results = await fetchJSON(url);
-            renderTable(results);
-            if (prodi) generateRecommendation(prodi);
-            else recommendationPanel.style.display = "none";
-        } catch (e) {
-            console.error(e);
-            tableBody.innerHTML = `<tr><td colspan="5">Terjadi kesalahan: ${e.message}</td></tr>`;
-            showError("Gagal mengambil data pencarian.");
-        }
-    }
-    
-    function renderTable(data) {
-        if (!data || data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="5">Tidak ada program studi yang sesuai dengan filter.</td></tr>';
-            return;
-        }
-        let html = "";
-        data.forEach(row => {
-            html += `<tr>
-                        <td>${row.no || ''}</td>
-                        <td>${escapeHtml(row.programStudi)}</td>
-                        <td>${row.jenjang}</td>
-                        <td>${escapeHtml(row.ptn)}</td>
-                        <td>${row.passingGrade.toFixed(2)}</td>
-                     </tr>`;
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-700 tracking-tight">Eksplorasi Passing Grade SNBT</h1>
+            <p class="mt-2 text-sm md:text-base text-slate-500">Analisis skor tryout vs passing grade</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 mb-8">
+            <form id="rekomendasiForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2 lg:col-span-1">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Skor Tryout <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                    <input type="number" step="0.01" id="skor" placeholder="Kosongkan jika hanya ingin melihat data" 
+                           class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm font-bold text-lg text-blue-700">
+                </div>
+
+                <div class="md:col-span-2 lg:col-span-1">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Jenjang</label>
+                    <select id="jenjang" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm bg-white">
+                        <option value="SEMUA">Semua Jenjang</option>
+                        <option value="S1">S1 (Sarjana)</option>
+                        <option value="D4">D4 (Sarjana Terapan)</option>
+                        <option value="D3">D3 (Diploma)</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2 lg:col-span-1">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Target PTN</label>
+                    <select id="ptn" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm bg-white">
+                        <option value="SEMUA">-- Tampilkan Semua PTN --</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2 lg:col-span-1">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Target Program Studi</label>
+                    <select id="prodi" disabled class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm bg-slate-100 disabled:opacity-50 text-sm">
+                        <option value="SEMUA">-- Pilih PTN terlebih dahulu --</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input type="checkbox" id="cariSerumpun" checked class="w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="cariSerumpun" class="font-bold text-blue-900">Aktifkan Mode Rekomendasi Prodi Serumpun</label>
+                            <p class="text-blue-700 mt-1">Mencari prodi di sub-rumpun yang sama di seluruh PTN yang nilainya mencukupi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 mt-2">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md transform hover:-translate-y-0.5 text-lg">
+                        🔍 Tampilkan Program Studi
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="resultContainer" class="hidden">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-4">
+                <h2 class="text-2xl font-bold text-slate-800" id="resultTitle">Daftar Program Studi</h2>
+                <p class="text-sm font-medium text-slate-500 mt-2 md:mt-0">Ditemukan: <span id="countResult" class="text-blue-600 font-bold">0</span> prodi</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto table-container" style="max-height: 800px;">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 z-10">
+                            <tr class="bg-slate-800 text-white text-sm uppercase tracking-wider">
+                                <th class="px-6 py-4 font-semibold text-center w-16">No</th>
+                                <th class="px-6 py-4 font-semibold">Program Studi & Klasifikasi Rumpun</th>
+                                <th class="px-6 py-4 font-semibold text-center w-24">Jenjang</th>
+                                <th class="px-6 py-4 font-semibold">PTN</th>
+                                <th class="px-6 py-4 font-semibold text-center w-32">Passing Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultBody" class="divide-y divide-slate-200 text-sm">
+                            </tbody>
+                    </table>
+                </div>
+                
+                <div id="emptyState" class="hidden p-12 text-center text-slate-500 bg-slate-50">
+                    <div class="text-5xl mb-4">🔍</div>
+                    <p class="text-xl font-bold text-slate-700">Tidak Ada Data yang Memenuhi Kriteria</p>
+                    <p class="text-md mt-2">Silakan perlebar pencarian Anda atau periksa kembali skor yang dimasukkan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // 0. LOGIN
+        // =====================================================================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const passInput = document.getElementById('passwordInput').value;
+            
+            if (passInput === 'bismillah') { // PASSWORD LOGIN
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('appContainer').classList.remove('hidden');
+                if(parsedData.length === 0) initApp();
+            } else {
+                document.getElementById('errorMsg').classList.remove('hidden');
+                document.getElementById('passwordInput').value = ''; 
+                document.getElementById('passwordInput').focus();
+            }
         });
-        tableBody.innerHTML = html;
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
+
+        // =====================================================================
+        // 1. DATA RAW - PASTE DATA LENGKAP KAMU DI SINI
+        // =====================================================================
+        const rawDataString = `
+1	FAKULTAS TEKNIK SIPIL DAN LINGKUNGAN - INFRASTRUKTUR SIPIL DAN KELAUTAN (FTSL-SI)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	739.87
+2	SEKOLAH ARSITEKTUR, PERENCANAAN DAN PENGEMBANGAN KEBIJAKAN (SAPPK)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	726.31
+3	SEKOLAH TEKNIK ELEKTRO DAN INFORMATIKA - KOMPUTASI (STEI-K)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	751.00
+4	FARMASI	S1	UNIVERSITAS GADJAH MADA (UGM)	721.04
+5	FAKULTAS TEKNIK SIPIL DAN LINGKUNGAN - TEKNOLOGI LINGKUNGAN (FTSL-L)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	735.62
+6	SEKOLAH TEKNIK ELEKTRO DAN INFORMATIKA - REKAYASA (STEI-R)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	746.00
+7	TEKNIK SIPIL	S1	UNIVERSITAS INDONESIA (UI)	722.99
+8	ARSITEKTUR INTERIOR	S1	UNIVERSITAS INDONESIA (UI)	725.07
+9	TEKNIK SIPIL	S1	UNIVERSITAS GADJAH MADA (UGM)	715.84
+10	TEKNIK INFORMATIKA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	706.85
+11	TEKNIK SIPIL	S1	UNIVERSITAS DIPONEGORO (UNDIP)	699.89
+12	SEKOLAH FARMASI (SF)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	717.25
+13	ARSITEKTUR	S1	UNIVERSITAS GADJAH MADA (UGM)	720.81
+14	FARMASI	S1	UNIVERSITAS INDONESIA (UI)	714.06
+15	TEKNIK SIPIL DAN LINGKUNGAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	696.52
+16	INFORMATIKA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	696.75
+17	ARSITEKTUR	S1	UNIVERSITAS INDONESIA (UI)	711.02
+18	FARMASI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	695.85
+19	TEKNIK BIOMEDIS	S1	UNIVERSITAS GADJAH MADA (UGM)	720.96
+20	TEKNIK INFORMATIKA	S1	UNIVERSITAS BRAWIJAYA (UB)	690.23
+21	INFORMATIKA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	673.66
+22	TEKNIK SIPIL	S1	UNIVERSITAS BRAWIJAYA (UB)	686.54
+23	TEKNIK SIPIL	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	672.25
+24	TEKNIK INFORMATIKA	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	671.35
+25	TEKNIK INFORMATIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	671.26
+26	TEKNIK INFORMATIKA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	670.96
+27	TEKNIK SIPIL	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	665.71
+28	INFORMATIKA	S1	UPN "VETERAN" JAKARTA (UPNVJ)	668.95
+29	AGRIBISNIS	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	613.96
+30	AGROTEKNOLOGI	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	637.34
+31	TEKNIK KIMIA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	660.30
+32	TEKNIK INDUSTRI	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	648.33
+33	TEKNOLOGI PANGAN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	585.33
+34	INFORMATIKA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	652.50
+35	SISTEM INFORMASI	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	646.51
+36	ARSITEKTUR	S1	UNIVERSITAS DIPONEGORO (UNDIP)	689.10
+37	TEKNIK LINGKUNGAN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	648.69
+38	DESAIN KOMUNIKASI VISUAL	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	574.69
+39	SAINS DATA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	567.98
+40	TEKNIK MESIN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	607.68
+41	EKONOMI PEMBANGUNAN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	595.53
+42	MANAJEMEN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	617.35
+43	AKUNTANSI	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	632.25
+44	ADMINISTRASI PUBLIK	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	610.56
+45	ADMINISTRASI BISNIS	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	621.31
+46	ILMU KOMUNIKASI	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	625.79
+47	HUBUNGAN INTERNASIONAL	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	640.44
+48	HUKUM	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	599.15
+49	PARIWISATA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	632.33
+50	KEWIRAUSAHAAN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	612.44
+51	FISIKA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	607.99
+52	DESAIN INTERIOR	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	640.67
+53	LINGUISTIK INDONESIA	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	565.89
+54	BISNIS DIGITAL	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	602.89
+55	KEDOKTERAN	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	677.22
+56	BAHASA INGGRIS UNTUK KOMUNIKASI BISNIS DAN PROFESIONAL	D4	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	518.39
+57	TEKNIK SIPIL	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	656.47
+58	ARSITEKTUR	S1	UNIVERSITAS BRAWIJAYA (UB)	685.50
+59	TEKNIK INFORMATIKA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	651.80
+60	FARMASI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	695.45
+61	TEKNIK SIPIL	S1	UNIVERSITAS JEMBER (UNEJ)	656.16
+62	PENDIDIKAN TEKNIK INFORMATIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	650.56
+63	TEKNIK SIPIL	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	655.68
+64	ARSITEKTUR LANSEKAP	S1	INSTITUT PERTANIAN BOGOR (IPB)	682.85
+65	TEKNIK INFORMATIKA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	641.10
+66	FARMASI	S1	UNIVERSITAS BRAWIJAYA (UB)	689.74
+67	TEKNIK SIPIL	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	654.77
+68	TEKNIK SIPIL	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	647.63
+69	SEKOLAH ARSITEKTUR, PERENCANAAN DAN PENGEMBANGAN KEBIJAKAN - KAMPUS CIREBON (SAPPK-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	676.33
+70	TEKNIK INFORMATIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	640.77
+71	TEKNIK INFORMATIKA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	639.60
+72	ARSITEKTUR	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	674.76
+73	TEKNIK INFORMATIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	636.18
+74	TEKNIK PERANCANGAN JALAN DAN JEMBATAN	D4	POLITEKNIK NEGERI BANDUNG	541.79
+75	TEKNIK PERAWATAN DAN PERBAIKAN GEDUNG	D4	POLITEKNIK NEGERI BANDUNG	537.66
+76	TEKNIK PERANCANGAN DAN KONSTRUKSI MESIN	D4	POLITEKNIK NEGERI BANDUNG	536.54
+77	PROSES MANUFAKTUR	D4	POLITEKNIK NEGERI BANDUNG	548.45
+78	TEKNIK PENDINGIN DAN TATA UDARA	D4	POLITEKNIK NEGERI BANDUNG	535.46
+79	TEKNOLOGI PEMBANGKIT TENAGA LISTRIK	D4	POLITEKNIK NEGERI BANDUNG	534.89
+80	TEKNIK KONSERVASI ENERGI	D4	POLITEKNIK NEGERI BANDUNG	561.28
+81	TEKNIK ELEKTRONIKA	D4	POLITEKNIK NEGERI BANDUNG	559.43
+82	TEKNIK OTOMASI INDUSTRI	D4	POLITEKNIK NEGERI BANDUNG	538.57
+83	TEKNIK KIMIA PRODUKSI BERSIH	D4	POLITEKNIK NEGERI BANDUNG	533.33
+84	TEKNIK TELEKOMUNIKASI NIRKABEL	D4	POLITEKNIK NEGERI BANDUNG	558.98
+85	KEUANGAN SYARIAH	D4	POLITEKNIK NEGERI BANDUNG	557.67
+86	AKUNTANSI MANAGEMEN PEMERINTAHAN	D4	POLITEKNIK NEGERI BANDUNG	561.89
+87	AKUNTANSI	D4	POLITEKNIK NEGERI BANDUNG	561.51
+88	ADMINISTRASI BISNIS	D4	POLITEKNIK NEGERI BANDUNG	556.55
+89	MANAJEMEN ASET	D4	POLITEKNIK NEGERI BANDUNG	558.98
+90	MANAJEMEN PEMASARAN	D4	POLITEKNIK NEGERI BANDUNG	558.65
+91	DESTINASI PARIWISATA	D4	POLITEKNIK NEGERI BANDUNG	554.08
+92	TEKNIK PENDINGIN DAN TATA UDARA	D3	POLITEKNIK NEGERI BANDUNG	533.25
+93	PENDIDIKAN TEKNIK SIPIL & PERENCANAAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	641.23
+94	MANAJEMEN PEMASARAN	D3	POLITEKNIK NEGERI BANDUNG	532.09
+95	TEKNIK KONSTRUKSI GEDUNG	D3	POLITEKNIK NEGERI BANDUNG	533.07
+96	TEKNIK AERONAUTIKA	D3	POLITEKNIK NEGERI BANDUNG	532.99
+97	KEUANGAN DAN PERBANKAN	D3	POLITEKNIK NEGERI BANDUNG	531.87
+98	INFORMATIKA	S1	UNIVERSITAS JEMBER (UNEJ)	629.14
+99	ADMINISTRASI BISNIS	D3	POLITEKNIK NEGERI BANDUNG	531.72
+100	TEKNIK MESIN	D3	POLITEKNIK NEGERI BANDUNG	532.71
+101	AKUNTANSI	D3	POLITEKNIK NEGERI BANDUNG	531.67
+102	ANALIS KIMIA	D3	POLITEKNIK NEGERI BANDUNG	532.67
+103	TEKNIK KONVERSI ENERGI	D3	POLITEKNIK NEGERI BANDUNG	532.52
+104	BAHASA INGGRIS	D3	POLITEKNIK NEGERI BANDUNG	531.50
+105	USAHA PERJALANAN WISATA	D3	POLITEKNIK NEGERI BANDUNG	531.33
+106	TEKNIK KIMIA	D3	POLITEKNIK NEGERI BANDUNG	532.45
+107	TEKNIK TELEKOMUNIKASI	D3	POLITEKNIK NEGERI BANDUNG	532.33
+108	TEKNIK ELEKTRONIKA	D3	POLITEKNIK NEGERI BANDUNG	532.23
+109	TEKNIK LISTRIK	D3	POLITEKNIK NEGERI BANDUNG	532.19
+110	TEKNOLOGI REKAYASA MANUFAKTUR	D4	POLITEKNIK MANUFAKTUR BANDUNG	548.89
+111	TEKNOLOGI REKAYASA PERANCANGAN MANUFAKTUR	D4	POLITEKNIK MANUFAKTUR BANDUNG	548.67
+112	TEKNOLOGI REKAYASA OTOMASI	D4	POLITEKNIK MANUFAKTUR BANDUNG	538.23
+113	TEKNOLOGI REKAYASA MATERIAL MAJU	D4	POLITEKNIK MANUFAKTUR BANDUNG	538.09
+114	REKAYASA PERANCANGAN MEKANIK	D4	POLITEKNIK MANUFAKTUR BANDUNG	537.45
+115	TEKNOLOGI REKAYASA MEKATRONIKA	D4	POLITEKNIK MANUFAKTUR BANDUNG	537.45
+116	MANAJEMEN TEKNOLOGI REKAYASA	D4	POLITEKNIK MANUFAKTUR BANDUNG	537.41
+117	PEMELIHARAAN MESIN	D3	POLITEKNIK MANUFAKTUR BANDUNG	537.06
+118	TEKNOLOGI MANUFAKTUR	D3	POLITEKNIK MANUFAKTUR BANDUNG	537.42
+119	TEKNOLOGI PEMBUATAN PERKAKAS PRESISI	D3	POLITEKNIK MANUFAKTUR BANDUNG	537.33
+120	TEKNOLOGI PERANCANGAN PERKAKAS PRESISI	D3	POLITEKNIK MANUFAKTUR BANDUNG	537.27
+121	TEKNOLOGI PENGECORAN LOGAM	D3	POLITEKNIK MANUFAKTUR BANDUNG	537.16
+122	PEND. TEKNIK INFORMATIKA & KOMPUTER	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	623.70
+123	TEKNIK SIPIL	S1	UNIVERSITAS HASANUDDIN (UNHAS)	637.84
+124	INFORMATIKA	S1	UNIVERSITAS NEGERI PADANG (UNP)	622.00
+125	INFORMATIKA	S1	UNIVERSITAS SILIWANGI (UNSIL)	619.07
+126	TEKNIK SIPIL	S1	UNIVERSITAS LAMPUNG (UNILA)	628.44
+127	TEKNIK SIPIL	S1	UNIVERSITAS NEGERI PADANG (UNP)	627.52
+128	FARMASI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	684.11
+129	TEKNIK BIOMEDIS	S1	UNIVERSITAS INDONESIA (UI)	717.25
+130	TEKNIK ARSITEKTUR	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	653.46
+131	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS NEGERI PADANG (UNP)	598.09
+132	MATEMATIKA (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	569.97
+133	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS NEGERI PADANG (UNP)	590.03
+134	BIOLOGI (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	588.07
+135	PENDIDIKAN FISIKA	S1	UNIVERSITAS NEGERI PADANG (UNP)	602.97
+136	FISIKA (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	588.82
+137	PENDIDIKAN KIMIA	S1	UNIVERSITAS NEGERI PADANG (UNP)	609.15
+138	KIMIA (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	612.84
+139	PENDIDIKAN TEKNIK BANGUNAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	564.44
+140	PENDIDIKAN TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI PADANG (UNP)	577.43
+141	PENDIDIKAN TEKNIK ELEKTRONIKA	S1	UNIVERSITAS NEGERI PADANG (UNP)	599.87
+142	PENDIDIKAN TEKNIK MESIN	S1	UNIVERSITAS NEGERI PADANG (UNP)	575.84
+143	PENDIDIKAN TEKNIK OTOMOTIF	S1	UNIVERSITAS NEGERI PADANG (UNP)	571.45
+144	TEKNIK INFORMATIKA	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	606.80
+145	ILMU KEOLAHRAGAAN (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	557.29
+146	TEKNIK PERTAMBANGAN (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	627.70
+147	PENDIDIKAN ILMU PENGETAHUAN ALAM	S1	UNIVERSITAS NEGERI PADANG (UNP)	572.50
+148	STATISTIKA (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	580.92
+149	TEKNIK MESIN (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	573.26
+150	ADMINISTRASI PENDIDIKAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	602.31
+151	PENDIDIKAN LUAR BIASA	S1	UNIVERSITAS NEGERI PADANG (UNP)	583.60
+152	TEKNOLOGI PENDIDIKAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	553.81
+153	PENDIDIKAN NON FORMAL	S1	UNIVERSITAS NEGERI PADANG (UNP)	578.47
+154	BIMBINGAN DAN KONSELING	S1	UNIVERSITAS NEGERI PADANG (UNP)	579.90
+155	PSIKOLOGI	S1	UNIVERSITAS NEGERI PADANG (UNP)	622.53
+156	PGSD (PENDIDIKAN GURU SEKOLAH DASAR)	S1	UNIVERSITAS NEGERI PADANG (UNP)	598.00
+157	PEND. GURU PENDIDIKAN ANAK USIA DINI	S1	UNIVERSITAS NEGERI PADANG (UNP)	570.29
+158	PENDIDIKAN BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS NEGERI PADANG (UNP)	571.82
+159	SASTRA INDONESIA	S1	UNIVERSITAS NEGERI PADANG (UNP)	577.44
+160	PENDD. BHS INGGRIS	S1	UNIVERSITAS NEGERI PADANG (UNP)	610.28
+161	SASTRA INGGRIS	S1	UNIVERSITAS NEGERI PADANG (UNP)	591.57
+162	PENDIDIKAN SENI RUPA	S1	UNIVERSITAS NEGERI PADANG (UNP)	547.27
+163	PENDIDIKAN SENDRATASIK	S1	UNIVERSITAS NEGERI PADANG (UNP)	546.07
+164	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS NEGERI PADANG (UNP)	601.59
+165	PENDIDIKAN SEJARAH	S1	UNIVERSITAS NEGERI PADANG (UNP)	550.03
+166	PENDIDIKAN SOSIOLOGI	S1	UNIVERSITAS NEGERI PADANG (UNP)	543.56
+167	PEND. PANCASILA & KEWARGANEGARAAN (PPKN)	S1	UNIVERSITAS NEGERI PADANG (UNP)	601.97
+168	ILMU ADMINISTRASI NEGARA (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	598.87
+169	PENDIDIKAN EKONOMI	S1	UNIVERSITAS NEGERI PADANG (UNP)	604.81
+170	MANAJEMEN (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	618.32
+171	AKUNTANSI (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	630.22
+172	EKONOMI PEMBANGUNAN (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	596.11
+173	PENDD. KESEJAHTERAAN KELUARGA	S1	UNIVERSITAS NEGERI PADANG (UNP)	560.78
+174	PENDIDIKAN JASMANI, KESEHATAN, DAN REKREASI	S1	UNIVERSITAS NEGERI PADANG (UNP)	546.13
+175	PENDD. KEPELATIHAN OLAHRAGA	S1	UNIVERSITAS NEGERI PADANG (UNP)	522.37
+176	GEOGRAFI (NK)	S1	UNIVERSITAS NEGERI PADANG (UNP)	610.61
+177	DESAIN KOMUNIKASI VISUAL	S1	UNIVERSITAS NEGERI PADANG (UNP)	608.33
+178	PENDIDIKAN BAHASA JEPANG	S1	UNIVERSITAS NEGERI PADANG (UNP)	574.22
+179	PENDIDIKAN MUSIK	S1	UNIVERSITAS NEGERI PADANG (UNP)	548.06
+180	PENDIDIKAN AGAMA ISLAM	S1	UNIVERSITAS NEGERI PADANG (UNP)	567.10
+181	PERPUSTAKAAN DAN ILMU INFORMASI	S1	UNIVERSITAS NEGERI PADANG (UNP)	591.64
+182	PENDIDIKAN TARI	S1	UNIVERSITAS NEGERI PADANG (UNP)	513.90
+183	AGRIBISNIS (KAMPUS KABUPATEN SIJUNJUNG)	S1	UNIVERSITAS NEGERI PADANG (UNP)	552.67
+184	AGROTEKNOLOGI (KAMPUS KABUPATEN SIJUNJUNG)	S1	UNIVERSITAS NEGERI PADANG (UNP)	512.89
+185	PETERNAKAN (KAMPUS KABUPATEN SIJUNJUNG)	S1	UNIVERSITAS NEGERI PADANG (UNP)	515.89
+186	ILMU HUKUM	S1	UNIVERSITAS NEGERI PADANG (UNP)	557.89
+187	ILMU KOMUNIKASI	S1	UNIVERSITAS NEGERI PADANG (UNP)	572.67
+188	TEKNIK GEOLOGI	S1	UNIVERSITAS NEGERI PADANG (UNP)	558.67
+189	PARIWISATA	S1	UNIVERSITAS NEGERI PADANG (UNP)	516.89
+190	TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI PADANG (UNP)	559.33
+191	BISNIS DIGITAL	S1	UNIVERSITAS NEGERI PADANG (UNP)	558.50
+192	KEPERAWATAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	558.00
+193	KEDOKTERAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	674.90
+194	PENDIDIKAN ILMU PENGETAHUAN SOSIAL (PIPS)	S1	UNIVERSITAS NEGERI PADANG (UNP)	518.41
+195	PENDIDIKAN GURU SEKOLAH DASAR - PSDKU SAWAHLUNTO	S1	UNIVERSITAS NEGERI PADANG (UNP)	511.08
+196	PENDIDIKAN GURU PENDIDIKAN ANAK USIA DINI - PSDKU SAWAHLUNTO	S1	UNIVERSITAS NEGERI PADANG (UNP)	503.75
+197	KEDOKTERAN HEWAN	S1	UNIVERSITAS NEGERI PADANG (UNP)	610.70
+198	TEKNIK ELEKTRO INDUSTRI (NK)	D4	UNIVERSITAS NEGERI PADANG (UNP)	603.73
+199	ANIMASI	D4	UNIVERSITAS NEGERI PADANG (UNP)	579.45
+200	PENDIDIKAN TATA RIAS DAN KECANTIKAN	D4	UNIVERSITAS NEGERI PADANG (UNP)	569.89
+201	MANAJEMEN PERHOTELAN (NK)	D4	UNIVERSITAS NEGERI PADANG (UNP)	576.67
+202	PENGINDERAAN JAUH DAN SISTEM INFORMASI GEOGRAFIS	D4	UNIVERSITAS NEGERI PADANG (UNP)	512.78
+203	TEKNOLOGI REKAYASA SISTEM ELEKTRONIKA	D4	UNIVERSITAS NEGERI PADANG (UNP)	512.67
+204	MANAJEMEN PAJAK	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.09
+205	INFORMASI, PERPUSTAKAAN & KEARSIPAN	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.99
+206	TEKNIK LISTRIK	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.42
+207	TATA BOGA	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.89
+208	TEKNIK OTOMOTIF (KAMPUS KABUPATEN SAWAHLUNTO)	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.25
+209	KEPERAWATAN PSDKU PARIAMAN	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.33
+210	TEKNIK PERTAMBANGAN	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.33
+211	MANAJEMEN PERDAGANGAN	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.75
+212	AKUNTANSI	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.67
+213	TEKNIK OTOMOTIF	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.25
+214	TEKNIK MESIN	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.19
+215	STATISTIKA	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.13
+216	TEKNIK PERTAMBANGAN (KAMPUS KABUPATEN SAWAHLUNTO)	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.33
+217	TATA BUSANA	D3	UNIVERSITAS NEGERI PADANG (UNP)	511.50
+218	ARSITEKTUR	S1	UPN "VETERAN" JAWA TIMUR (UPN JATIM)	652.58
+219	FARMASI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	672.20
+220	SOSIAL EKONOMI PERTANIAN / AGRIBISNIS	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	600.13
+221	SISTEM INFORMASI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	664.14
+222	MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	647.80
+223	BIOLOGI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	636.23
+224	KIMIA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	641.51
+225	FISIKA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	610.14
+226	KESEHATAN MASYARAKAT	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	644.94
+227	FARMASI	S1	UNIVERSITAS JEMBER (UNEJ)	670.48
+228	ILMU KEPERAWATAN	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	627.77
+229	PENDIDIKAN DOKTER	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	713.30
+230	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	607.77
+231	PENDIDIKAN KIMIA	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	602.79
+232	TEKNIK PERTAMBANGAN	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	633.84
+233	AKUNTANSI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	642.89
+234	ILMU EKONOMI DAN STUDI PEMBANGUNAN	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	621.43
+235	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	668.31
+236	ILMU HUKUM	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	623.49
+237	ILMU PERPUSTAKAAN	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	618.86
+238	JURNALISTIK	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	610.65
+239	MANAJEMEN	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	630.41
+240	ILMU POLITIK	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	620.67
+241	KESEJAHTERAAN SOSIAL	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	626.01
+242	PSIKOLOGI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	642.80
+243	SOSIOLOGI	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	627.83
+244	BAHASA DAN SASTRA INGGRIS	S1	UNIVERSITAS ISLAM NEGERI JAKARTA (UIN JAKARTA)	569.56
+245	MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	632.44
+246	BIOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	607.47
+247	FISIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	624.79
+248	KIMIA	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	622.37
+249	TEKNIK ELEKTRO	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	623.91
+250	AGROTEKNOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	606.43
+251	SOSIOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	601.25
+252	ILMU HUKUM	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	613.30
+253	MANAJEMEN	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	618.54
+254	ADMINISTRASI PUBLIK	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	599.49
+255	ILMU KOM. KONST. HUMAS	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	613.91
+256	ILMU KOM. KONST. JURNALISTIK	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	605.05
+257	BAHASA DAN SASTRA INGGRIS	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	598.29
+258	PSIKOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	610.09
+259	ILMU POLITIK	S1	UNIVERSITAS ISLAM NEGERI SUNAN GUNUNG DJATI (UIN BANDUNG)	595.21
+260	ARSITEKTUR	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	651.39
+261	FARMASI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	667.83
+262	FARMASI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	662.58
+263	PENDIDIKAN TEKNIK INFORMATIKA	S1	UNIVERSITAS NEGERI PADANG (UNP)	591.87
+264	PENDIDIKAN TEKNIK ARSITEKTUR	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	644.90
+265	TEKNIK SIPIL	S1	UNIVERSITAS SILIWANGI (UNSIL)	580.94
+266	FARMASI	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	649.53
+267	INFORMATIKA	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	571.66
+268	TEKNIK ARSITEKTUR	S1	UNIVERSITAS HASANUDDIN (UNHAS)	634.10
+269	ARSITEKTUR	S1	UNIVERSITAS LAMPUNG (UNILA)	624.01
+270	TEKNOLOGI REKAYASA PELAKSANAAN BANGUNAN SIPIL	D4	UNIVERSITAS GADJAH MADA (UGM)	569.71
+271	TEKNIK PENGELOLAAN DAN PEMELIHARAAN INFRASTRUKTUR SIPIL	D4	UNIVERSITAS GADJAH MADA (UGM)	569.50
+272	TEKNIK ARSITEKTUR	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	618.26
+273	FARMASI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	647.92
+274	FARMASI	S1	UNIVERSITAS LAMPUNG (UNILA)	642.13
+275	ARSITEKTUR	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	607.23
+276	FARMASI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	631.38
+277	FARMASI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	628.60
+278	TEKNIK SIPIL	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.99
+279	TEKNIK INFORMATIKA	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	563.99
+280	TEKNIK INFORMATIKA	D4	POLITEKNIK NEGERI BANDUNG	563.75
+281	TEKNIK MESIN DAN MANUFAKTUR	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	545.95
+282	TEKNIK ELEKTRONIKA	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	552.33
+283	TEKNOLOGI REKAYASA PERANGKAT LUNAK	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	543.67
+284	TEKNOLOGI REKAYASA PERANCANGAN MANUFAKTUR	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	543.50
+285	PERTANIAN PRESISI	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	542.30
+286	BISNIS DIGITAL	D4	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	517.09
+287	TEKNIK PERAWATAN DAN PERBAIKAN MESIN	D3	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	543.43
+288	TEKNIK ELEKTRONIKA	D3	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	543.33
+289	TEKNIK PERANCANGAN MEKANIK	D3	POLITEKNIK MANUFAKTUR NEGERI BANGKA BELITUNG	543.26
+290	MATEMATIKA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	625.75
+291	FISIKA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	608.23
+292	KESEHATAN MASYARAKAT	S1	UNIVERSITAS HASANUDDIN (UNHAS)	632.37
+293	KIMIA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	627.23
+294	BIOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	620.14
+295	PENDIDIKAN DOKTER	S1	UNIVERSITAS HASANUDDIN (UNHAS)	719.24
+296	AGROTEKNOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	635.76
+297	ILMU DAN TEKNOLOGI PANGAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	592.36
+298	AGRIBISNIS	S1	UNIVERSITAS HASANUDDIN (UNHAS)	583.40
+299	KETEKNIKAN PERTANIAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	568.68
+300	TEKNIK MESIN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	589.73
+301	TEKNIK ELEKTRO	S1	UNIVERSITAS HASANUDDIN (UNHAS)	611.50
+302	TEKNIK PERKAPALAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	610.27
+303	TEKNIK GEOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	607.67
+304	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	684.17
+305	KEHUTANAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	568.08
+306	GEOFISIKA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	605.01
+307	STATISTIKA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	638.03
+308	ILMU GIZI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	589.71
+309	ILMU KELAUTAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	605.70
+310	BUDIDAYA PERAIRAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	600.83
+311	MANAJEMEN SUMBERDAYA PERAIRAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	570.07
+312	PEMANFAATAN SUMBERDAYA PERIKANAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	558.67
+313	AGROBISNIS PERIKANAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	569.36
+314	ILMU KEPERAWATAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	616.72
+315	PETERNAKAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	562.16
+316	TEKNIK KELAUTAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	587.16
+317	TEKNIK INDUSTRI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	609.28
+318	TEKNIK SISTEM PERKAPALAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	601.35
+319	TEKNIK PENGEMB. WILAYAH KOTA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	613.28
+320	TEKNIK PERTAMBANGAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	637.42
+321	FISOTERAPI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	620.88
+322	TEKNIK LINGKUNGAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	607.45
+323	KEDOKTERAN HEWAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	636.83
+324	PSIKOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	601.13
+325	ILMU KOMPUTER	S1	UNIVERSITAS HASANUDDIN (UNHAS)	627.05
+326	ILMU AKTUARIA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	636.40
+327	REKAYASA KEHUTANAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	568.35
+328	ILMU TANAH	S1	UNIVERSITAS HASANUDDIN (UNHAS)	558.76
+329	PROTEKSI TANAMAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	552.89
+330	KONSERVASI HUTAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	567.99
+331	TEKNOLOGI HASIL PERIKANAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	547.39
+332	MANAJEMEN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	619.82
+333	ILMU HUKUM	S1	UNIVERSITAS HASANUDDIN (UNHAS)	625.25
+334	ILMU POLITIK	S1	UNIVERSITAS HASANUDDIN (UNHAS)	623.28
+335	ANTROPOLOGI SOSIAL	S1	UNIVERSITAS HASANUDDIN (UNHAS)	556.64
+336	ILMU SEJARAH	S1	UNIVERSITAS HASANUDDIN (UNHAS)	562.77
+337	ILMU KOMUNIKASI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	647.46
+338	SOSIOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	582.79
+339	AKUNTANSI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	642.57
+340	ILMU PEMERINTAHAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	631.38
+341	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS HASANUDDIN (UNHAS)	639.10
+342	ADMINISTRASI PUBLIK	S1	UNIVERSITAS HASANUDDIN (UNHAS)	619.56
+343	SASTRA INDONESIA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	570.40
+344	SASTRA DAERAH/BUGIS MAKASSAR	S1	UNIVERSITAS HASANUDDIN (UNHAS)	545.20
+345	SASTRA ASIA BARAT/ARAB	S1	UNIVERSITAS HASANUDDIN (UNHAS)	519.98
+346	SASTRA INGGRIS	S1	UNIVERSITAS HASANUDDIN (UNHAS)	648.35
+347	SASTRA PERANCIS/ BARAT ROMAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	539.80
+348	ARKEOLOGI	S1	UNIVERSITAS HASANUDDIN (UNHAS)	568.13
+349	SASTRA JEPANG	S1	UNIVERSITAS HASANUDDIN (UNHAS)	575.25
+350	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS HASANUDDIN (UNHAS)	592.45
+351	HUKUM ADMINISTRASI NEGARA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	585.13
+352	BAHASA MANDARIN DAN KEBUDAYAAN TIONGKOK	S1	UNIVERSITAS HASANUDDIN (UNHAS)	508.79
+353	PARIWISATA	S1	UNIVERSITAS HASANUDDIN (UNHAS)	517.75
+354	EKONOMI DAN BISNIS ISLAM	S1	UNIVERSITAS HASANUDDIN (UNHAS)	607.12
+355	TEKNOLOGI PRODUKSI TERNAK	D4	UNIVERSITAS HASANUDDIN (UNHAS)	558.08
+356	TEKNOLOGI PRODUKSI TANAMAN PANGAN	D4	UNIVERSITAS HASANUDDIN (UNHAS)	565.47
+357	AGRIBISNIS PANGAN	D4	UNIVERSITAS HASANUDDIN (UNHAS)	563.32
+358	TEKNOLOGI PAKAN TERNAK	D4	UNIVERSITAS HASANUDDIN (UNHAS)	556.98
+359	AGRIBISNIS PETERNAKAN	D4	UNIVERSITAS HASANUDDIN (UNHAS)	558.35
+360	TERAPI GIGI	D4	UNIVERSITAS HASANUDDIN (UNHAS)	586.09
+361	BUDI DAYA LAUT DAN PANTAI	D4	UNIVERSITAS HASANUDDIN (UNHAS)	546.67
+362	DESTINASI PARIWISATA	D4	UNIVERSITAS HASANUDDIN (UNHAS)	507.42
+363	TEKNOLOGI AKUAKULTUR DAN PASCA PANEN PERIKANAN	D4	UNIVERSITAS HASANUDDIN (UNHAS)	528.08
+364	PARAMEDIK VETERINER	D4	UNIVERSITAS HASANUDDIN (UNHAS)	541.59
+365	TEKNIK INFORMATIKA	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.17
+366	TEKNIK INFORMATIKA (KAMPUS KAB LAMONGAN)	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	556.75
+367	TEKNIK INFORMATIKA (KAMPUS KAB SUMENEP)	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	556.67
+368	BIOLOGI	S1	UNIVERSITAS GADJAH MADA (UGM)	692.54
+369	GEOGRAFI LINGKUNGAN	S1	UNIVERSITAS GADJAH MADA (UGM)	685.81
+370	KARTOGRAFI DAN PENGINDERAAN JAUH	S1	UNIVERSITAS GADJAH MADA (UGM)	689.16
+371	PEMBANGUNAN WILAYAH	S1	UNIVERSITAS GADJAH MADA (UGM)	692.53
+372	KEDOKTERAN	S1	UNIVERSITAS GADJAH MADA (UGM)	750.87
+373	ILMU KEPERAWATAN	S1	UNIVERSITAS GADJAH MADA (UGM)	682.16
+374	GIZI	S1	UNIVERSITAS GADJAH MADA (UGM)	704.50
+375	KEDOKTERAN GIGI	S1	UNIVERSITAS GADJAH MADA (UGM)	723.92
+376	KEDOKTERAN HEWAN	S1	UNIVERSITAS GADJAH MADA (UGM)	684.92
+377	FISIKA	S1	UNIVERSITAS GADJAH MADA (UGM)	689.26
+378	KIMIA	S1	UNIVERSITAS GADJAH MADA (UGM)	702.47
+379	MATEMATIKA	S1	UNIVERSITAS GADJAH MADA (UGM)	716.50
+380	ILMU KOMPUTER	S1	UNIVERSITAS GADJAH MADA (UGM)	723.76
+381	STATISTIKA	S1	UNIVERSITAS GADJAH MADA (UGM)	731.37
+382	GEOFISIKA	S1	UNIVERSITAS GADJAH MADA (UGM)	698.90
+383	ELEKTRONIKA DAN INSTRUMENTASI	S1	UNIVERSITAS GADJAH MADA (UGM)	699.52
+384	AGRONOMI	S1	UNIVERSITAS GADJAH MADA (UGM)	670.35
+385	ILMU TANAH	S1	UNIVERSITAS GADJAH MADA (UGM)	671.61
+386	EKONOMI PERTANIAN DAN AGRIBISNIS	S1	UNIVERSITAS GADJAH MADA (UGM)	687.59
+387	PROTEKSI TANAMAN (ILMU HAMA DAN PENYAKIT TUMBUHAN)	S1	UNIVERSITAS GADJAH MADA (UGM)	664.38
+388	PENYULUHAN DAN KOMUNIKASI PERTANIAN	S1	UNIVERSITAS GADJAH MADA (UGM)	656.24
+389	AKUAKULTUR (BUDIDAYA PERIKANAN)	S1	UNIVERSITAS GADJAH MADA (UGM)	665.77
+390	TEKNOLOGI HASIL PERIKANAN	S1	UNIVERSITAS GADJAH MADA (UGM)	667.64
+391	MANAJEMEN SUMBERDAYA AKUATIK (MANAJEMEN SUMBER DAYA PERIKANAN)	S1	UNIVERSITAS GADJAH MADA (UGM)	667.07
+392	MIKROBIOLOGI PERTANIAN	S1	UNIVERSITAS GADJAH MADA (UGM)	679.67
+393	ILMU DAN INDUSTRI PETERNAKAN	S1	UNIVERSITAS GADJAH MADA (UGM)	660.54
+394	PERENCANAAN WILAYAH DAN KOTA	S1	UNIVERSITAS GADJAH MADA (UGM)	706.63
+395	TEKNIK GEODESI	S1	UNIVERSITAS GADJAH MADA (UGM)	702.61
+396	TEKNIK GEOLOGI	S1	UNIVERSITAS GADJAH MADA (UGM)	696.12
+397	TEKNIK KIMIA	S1	UNIVERSITAS GADJAH MADA (UGM)	724.42
+398	TEKNIK ELEKTRO	S1	UNIVERSITAS GADJAH MADA (UGM)	711.16
+399	TEKNIK MESIN	S1	UNIVERSITAS GADJAH MADA (UGM)	718.32
+400	TEKNIK NUKLIR	S1	UNIVERSITAS GADJAH MADA (UGM)	690.68
+401	TEKNIK FISIKA	S1	UNIVERSITAS GADJAH MADA (UGM)	707.07
+402	TEKNIK INDUSTRI	S1	UNIVERSITAS GADJAH MADA (UGM)	716.43
+403	TEKNIK PERTANIAN	S1	UNIVERSITAS GADJAH MADA (UGM)	681.11
+404	TEKNOLOGI PANGAN DAN HASIL PERTANIAN	S1	UNIVERSITAS GADJAH MADA (UGM)	712.19
+405	TEKNOLOGI INDUSTRI PERTANIAN	S1	UNIVERSITAS GADJAH MADA (UGM)	694.48
+406	HIGIENE GIGI	S1	UNIVERSITAS GADJAH MADA (UGM)	667.89
+407	KEHUTANAN	S1	UNIVERSITAS GADJAH MADA (UGM)	667.77
+408	TEKNOLOGI INFORMASI	S1	UNIVERSITAS GADJAH MADA (UGM)	724.98
+409	ILMU AKTUARIA	S1	UNIVERSITAS GADJAH MADA (UGM)	727.19
+410	KEDOKTERAN HEWAN DAN BIOMEDIS	S1	INSTITUT PERTANIAN BOGOR (IPB)	670.47
+411	TEKNIK INFRASTRUKTUR LINGKUNGAN	S1	UNIVERSITAS GADJAH MADA (UGM)	688.67
+412	ILMU EKONOMI	S1	UNIVERSITAS GADJAH MADA (UGM)	709.55
+413	MANAJEMEN	S1	UNIVERSITAS GADJAH MADA (UGM)	707.41
+414	AKUNTANSI	S1	UNIVERSITAS GADJAH MADA (UGM)	719.12
+415	FILSAFAT	S1	UNIVERSITAS GADJAH MADA (UGM)	663.49
+416	HUKUM	S1	UNIVERSITAS GADJAH MADA (UGM)	689.11
+417	ANTROPOLOGI BUDAYA	S1	UNIVERSITAS GADJAH MADA (UGM)	668.61
+418	ARKEOLOGI	S1	UNIVERSITAS GADJAH MADA (UGM)	674.29
+419	SEJARAH	S1	UNIVERSITAS GADJAH MADA (UGM)	700.68
+420	SASTRA ARAB	S1	UNIVERSITAS GADJAH MADA (UGM)	638.66
+421	BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS GADJAH MADA (UGM)	694.67
+422	SASTRA INGGRIS	S1	UNIVERSITAS GADJAH MADA (UGM)	671.48
+423	BAHASA, SASTRA, DAN BUDAYA JAWA	S1	UNIVERSITAS GADJAH MADA (UGM)	646.95
+424	BAHASA DAN SASTRA PRANCIS	S1	UNIVERSITAS GADJAH MADA (UGM)	676.71
+425	BAHASA DAN KEBUDAYAAN JEPANG	S1	UNIVERSITAS GADJAH MADA (UGM)	671.82
+426	BAHASA DAN KEBUDAYAAN KOREA	S1	UNIVERSITAS GADJAH MADA (UGM)	689.83
+427	MANAJEMEN DAN KEBIJAKAN PUBLIK	S1	UNIVERSITAS GADJAH MADA (UGM)	705.48
+428	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS GADJAH MADA (UGM)	733.07
+429	POLITIK DAN PEMERINTAHAN	S1	UNIVERSITAS GADJAH MADA (UGM)	691.70
+430	PEMBANGUNAN SOSIAL DAN KESEJAHTERAAN	S1	UNIVERSITAS GADJAH MADA (UGM)	694.90
+431	ILMU KOMUNIKASI	S1	UNIVERSITAS GADJAH MADA (UGM)	700.37
+432	SOSIOLOGI	S1	UNIVERSITAS GADJAH MADA (UGM)	683.38
+433	PSIKOLOGI	S1	UNIVERSITAS GADJAH MADA (UGM)	694.57
+434	PARIWISATA	S1	UNIVERSITAS GADJAH MADA (UGM)	687.81
+435	TEKNIK SUMBER DAYA AIR	S1	UNIVERSITAS GADJAH MADA (UGM)	661.35
+436	MANAJEMEN INFORMASI KESEHATAN	D4	UNIVERSITAS GADJAH MADA (UGM)	560.28
+437	TEKNOLOGI REKAYASA PERANGKAT LUNAK	D4	UNIVERSITAS GADJAH MADA (UGM)	559.86
+438	TEKNOLOGI REKAYASA ELEKTRO	D4	UNIVERSITAS GADJAH MADA (UGM)	569.46
+439	TEKNOLOGI REKAYASA INSTRUMENTASI DAN KONTROL	D4	UNIVERSITAS GADJAH MADA (UGM)	586.22
+440	TEKNOLOGI REKAYASA INTERNET	D4	UNIVERSITAS GADJAH MADA (UGM)	559.47
+441	TEKNOLOGI REKAYASA MESIN	D4	UNIVERSITAS GADJAH MADA (UGM)	609.36
+442	TEKNIK PENGELOLAAN DAN PERAWATAN ALAT BERAT	D4	UNIVERSITAS GADJAH MADA (UGM)	558.78
+443	PENGELOLAAN HUTAN	D4	UNIVERSITAS GADJAH MADA (UGM)	570.74
+444	TEKNOLOGI VETERINER	D4	UNIVERSITAS GADJAH MADA (UGM)	558.50
+445	PENGEMBANGAN PRODUK AGROINDUSTRI	D4	UNIVERSITAS GADJAH MADA (UGM)	560.62
+446	TEKNOLOGI SURVEI DAN PEMETAAN DASAR	D4	UNIVERSITAS GADJAH MADA (UGM)	557.35
+447	SISTEM INFORMASI GEOGRAFIS	D4	UNIVERSITAS GADJAH MADA (UGM)	616.10
+448	MANAJEMEN DAN PENILAIAN PROPERTI	D4	UNIVERSITAS GADJAH MADA (UGM)	565.12
+449	PERBANKAN	D4	UNIVERSITAS GADJAH MADA (UGM)	542.17
+450	AKUNTANSI SEKTOR PUBLIK	D4	UNIVERSITAS GADJAH MADA (UGM)	581.75
+451	PEMBANGUNAN EKONOMI KEWILAYAHAN	D4	UNIVERSITAS GADJAH MADA (UGM)	563.14
+452	PENGELOLAAN ARSIP DAN REKAMAN INFORMASI	D4	UNIVERSITAS GADJAH MADA (UGM)	691.47
+453	BAHASA INGGRIS	D4	UNIVERSITAS GADJAH MADA (UGM)	587.12
+454	BISNIS PERJALANAN WISATA	D4	UNIVERSITAS GADJAH MADA (UGM)	626.50
+455	BAHASA JEPANG UNTUK KOMUNIKASI BISNIS DAN PROFESIONAL	D4	UNIVERSITAS GADJAH MADA (UGM)	534.29
+456	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	687.43
+457	PENDIDIKAN FISIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	660.59
+458	PENDIDIKAN KIMIA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	674.81
+459	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	661.31
+460	PENDIDIKAN TEKNIK ELEKTRONIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	638.11
+461	PENDIDIKAN TEKNIK OTOMOTIF	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	608.08
+462	PENDIDIKAN TEKNIK MESIN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	623.71
+463	PENDIDIKAN TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	598.03
+464	MATEMATIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	677.41
+465	FISIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	654.79
+466	KIMIA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	675.52
+467	BIOLOGI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	660.59
+468	PENDIDIKAN TEKNIK MEKATRONIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	635.10
+469	PENDIDIKAN IPA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	650.80
+470	ILMU KEOLAHRAGAAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	597.01
+471	STATISTIKA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	683.40
+472	PENDIDIKAN JASMANI KESEHATAN DAN REKREASI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	571.65
+473	PENDIDIKAN KEPELATIHAN OLAHRAGA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	565.35
+474	PENDIDIKAN JASMANI SEKOLAH DASAR	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	569.55
+475	TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	649.72
+476	TEKNOLOGI INFORMASI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	678.29
+477	TEKNIK MANUFAKTUR	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	640.93
+478	MANAJEMEN PENDIDIKAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	658.82
+479	BIMBINGAN & KONSELING	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	646.90
+480	TEKNOLOGI PENDIDIKAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	645.73
+481	PENDIDIKAN LUAR BIASA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	624.18
+482	PENDIDIKAN LUAR SEKOLAH	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	636.12
+483	PENDIDIKAN KRIYA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	621.71
+484	PENDIDIKAN KEWARGANEGARAAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	641.50
+485	PENDIDIKAN SEJARAH	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	631.92
+486	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	641.84
+487	PENDIDIKAN TEKNIK BUSANA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	643.61
+488	PENDIDIKAN TEKNIK BOGA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	648.90
+489	PENDIDIKAN ADMINISTRASI PERKANTORAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	641.16
+490	PENDIDIKAN AKUNTANSI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	661.70
+491	PENDIDIKAN EKONOMI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	653.66
+492	MANAJEMEN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	645.10
+493	ILMU SEJARAH	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	626.38
+494	AKUNTANSI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	689.66
+495	PENDIDIKAN SOSIOLOGI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	649.36
+496	PENDIDIKAN IPS	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	642.06
+497	ADMINISTRASI PUBLIK	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	676.67
+498	KEBIJAKAN PENDIDIKAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	640.27
+499	PENDIDIKAN GURU SEKOLAH DASAR	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	647.06
+500	PENDIDIKAN GURU PAUD	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	619.64
+501	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	657.48
+502	PENDIDIKAN BAHASA JERMAN	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	632.48
+503	PENDIDIKAN BAHASA PRANCIS	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	625.50
+504	PENDIDIKAN SENI RUPA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	662.75
+505	SASTRA INDONESIA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	635.57
+506	SASTRA INGGRIS	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	658.92
+507	PENDIDIKAN SENI TARI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	591.96
+508	PENDIDIKAN SENI MUSIK	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	603.30
+509	PENDIDIKAN BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	626.91
+510	PENDIDIKAN BAHASA JAWA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	618.59
+511	ILMU KOMUNIKASI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	663.57
+512	PSIKOLOGI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	662.38
+513	TEKNIK INFRASTRUKTUR SIPIL DAN PERANCANGAN ARSITEKTUR	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.00
+514	TEKNIK INDUSTRI	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	574.75
+515	PARIWISATA	S1	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	602.21
+516	TATA BUSANA	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	563.67
+517	TATA RIAS DAN KECANTIKAN	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	563.89
+518	TEKNIK ELEKTRONIKA	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	565.25
+519	AKUNTANSI	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.75
+520	TEKNIK ELEKTRO	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	565.17
+521	MANAJEMEN PEMASARAN	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.67
+522	TEKNIK MESIN	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	565.06
+523	TATA BOGA	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.05
+524	MESIN OTOMOTIF	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.89
+525	ADMINISTRASI PERKANTORAN	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.50
+526	PENGOBATAN TRADISIONAL INDONESIA	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.21
+527	PENGELOLAAN USAHA REKREASI	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.33
+528	PROMOSI KESEHATAN	D4	UNIVERSITAS NEGERI YOGYAKARTA (UNY)	564.46
+529	TEKNIK GEOLOGI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	675.18
+530	TEKNIK PERTAMBANGAN	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	673.21
+531	TEKNIK PERMINYAKAN	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	659.30
+532	TEKNIK LINGKUNGAN	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	660.92
+533	TEKNIK GEOFISIKA	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	664.70
+534	TEKNIK KIMIA	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	665.40
+535	TEKNIK INDUSTRI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	663.22
+536	AGROTEKNOLOGI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	645.04
+537	AGRIBISNIS	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	653.88
+538	METALURGI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	652.12
+539	ILMU TANAH	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	643.07
+540	SISTEM INFORMASI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	656.76
+541	TEKNIK GEOMATIKA	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	651.15
+542	MANAJEMEN	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	626.78
+543	AKUNTANSI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	644.66
+544	EKONOMI PEMBANGUNAN	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	651.61
+545	ILMU HUBUNGAN INTERNASIONAL	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	651.86
+546	ILMU ADMINISTRASI BISNIS	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	635.69
+547	ILMU KOMUNIKASI	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	672.51
+548	HUBUNGAN MASYARAKAT	S1	UPN "VETERAN" YOGYAKARTA (UPNYK)	638.56
+549	TEKNIK KIMIA	D3	UPN "VETERAN" YOGYAKARTA (UPNYK)	625.33
+550	AGROTEKNOLOGI / AGROEKOTEKNOLOGI	S1	UNIVERSITAS JEMBER (UNEJ)	600.14
+551	AGRIBISNIS	S1	UNIVERSITAS JEMBER (UNEJ)	601.15
+552	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS JEMBER (UNEJ)	608.61
+553	PENDIDIKAN FISIKA	S1	UNIVERSITAS JEMBER (UNEJ)	623.65
+554	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS JEMBER (UNEJ)	624.12
+555	TEKNOLOGI HASIL PERTANIAN	S1	UNIVERSITAS JEMBER (UNEJ)	599.79
+556	TEKNIK PERTANIAN	S1	UNIVERSITAS JEMBER (UNEJ)	610.73
+557	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS JEMBER (UNEJ)	705.89
+558	MATEMATIKA	S1	UNIVERSITAS JEMBER (UNEJ)	626.66
+559	FISIKA	S1	UNIVERSITAS JEMBER (UNEJ)	620.83
+560	KIMIA	S1	UNIVERSITAS JEMBER (UNEJ)	616.06
+561	BIOLOGI	S1	UNIVERSITAS JEMBER (UNEJ)	572.83
+562	PENDIDIKAN DOKTER	S1	UNIVERSITAS JEMBER (UNEJ)	736.45
+563	KESEHATAN MASYARAKAT	S1	UNIVERSITAS JEMBER (UNEJ)	642.14
+564	TEKNIK MESIN	S1	UNIVERSITAS JEMBER (UNEJ)	626.31
+565	TEKNIK ELEKTRO	S1	UNIVERSITAS JEMBER (UNEJ)	634.24
+566	ILMU KEPERAWATAN	S1	UNIVERSITAS JEMBER (UNEJ)	628.90
+567	SISTEM INFORMASI	S1	UNIVERSITAS JEMBER (UNEJ)	642.02
+568	TEKNOLOGI INDUSTRI PERTANIAN	S1	UNIVERSITAS JEMBER (UNEJ)	607.06
+569	ILMU TANAH	S1	UNIVERSITAS JEMBER (UNEJ)	604.12
+570	PROTEKSI TANAMAN	S1	UNIVERSITAS JEMBER (UNEJ)	618.64
+571	TEKNOLOGI INFORMASI	S1	UNIVERSITAS JEMBER (UNEJ)	637.90
+572	PENDIDIKAN IPA	S1	UNIVERSITAS JEMBER (UNEJ)	586.26
+573	PERENCANAAN WILAYAH DAN KOTA	S1	UNIVERSITAS JEMBER (UNEJ)	628.25
+574	TEKNIK KIMIA	S1	UNIVERSITAS JEMBER (UNEJ)	629.16
+575	AGRONOMI	S1	UNIVERSITAS JEMBER (UNEJ)	571.93
+576	ILMU PERTANIAN	S1	UNIVERSITAS JEMBER (UNEJ)	580.83
+577	PENYULUHAN PERTANIAN	S1	UNIVERSITAS JEMBER (UNEJ)	583.56
+578	TEKNIK LINGKUNGAN	S1	UNIVERSITAS JEMBER (UNEJ)	602.15
+579	TEKNIK KONSTRUKSI PERKAPALAN	S1	UNIVERSITAS JEMBER (UNEJ)	584.79
+580	PETERNAKAN	S1	UNIVERSITAS JEMBER (UNEJ)	580.13
+581	GIZI	S1	UNIVERSITAS JEMBER (UNEJ)	624.98
+582	TEKNIK PERTAMBANGAN	S1	UNIVERSITAS JEMBER (UNEJ)	634.02
+583	TEKNIK PERMINYAKAN	S1	UNIVERSITAS JEMBER (UNEJ)	608.10
+584	ILMU HUKUM	S1	UNIVERSITAS JEMBER (UNEJ)	595.74
+585	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS JEMBER (UNEJ)	652.81
+586	ILMU ADMINISTRASI NEGARA	S1	UNIVERSITAS JEMBER (UNEJ)	628.67
+587	ILMU ADMINISTRASI BISNIS	S1	UNIVERSITAS JEMBER (UNEJ)	634.57
+588	ILMU KESEJAHTERAAN SOSIAL	S1	UNIVERSITAS JEMBER (UNEJ)	588.29
+589	SOSIOLOGI	S1	UNIVERSITAS JEMBER (UNEJ)	613.56
+590	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS JEMBER (UNEJ)	612.48
+591	MANAJEMEN	S1	UNIVERSITAS JEMBER (UNEJ)	623.71
+592	AKUNTANSI	S1	UNIVERSITAS JEMBER (UNEJ)	636.73
+593	PENDIDIKAN LUAR SEKOLAH	S1	UNIVERSITAS JEMBER (UNEJ)	571.91
+594	PENDIDIKAN EKONOMI	S1	UNIVERSITAS JEMBER (UNEJ)	609.43
+595	PENDIDIKAN SEJARAH	S1	UNIVERSITAS JEMBER (UNEJ)	568.62
+596	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS JEMBER (UNEJ)	611.46
+597	PENDIDIKAN BHS. & SASTRA INDO.	S1	UNIVERSITAS JEMBER (UNEJ)	602.26
+598	PENDIDIKAN GURU SEKOLAH DASAR	S1	UNIVERSITAS JEMBER (UNEJ)	599.37
+599	SASTRA INGGRIS	S1	UNIVERSITAS JEMBER (UNEJ)	610.63
+600	SASTRA INDONESIA	S1	UNIVERSITAS JEMBER (UNEJ)	610.53
+601	ILMU SEJARAH	S1	UNIVERSITAS JEMBER (UNEJ)	581.32
+602	TELEVISI & FILM	S1	UNIVERSITAS JEMBER (UNEJ)	591.77
+603	PG PAUD	S1	UNIVERSITAS JEMBER (UNEJ)	560.68
+604	EKONOMI SYARIAH	S1	UNIVERSITAS JEMBER (UNEJ)	611.43
+605	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS JEMBER (UNEJ)	605.77
+606	EKONOMI SYARIAH KAMPUS BONDOWOSO	S1	UNIVERSITAS JEMBER (UNEJ)	587.74
+607	PEND. GURU SEKOLAH DASAR KAMPUS BONDOWOSO	S1	UNIVERSITAS JEMBER (UNEJ)	571.41
+608	TEKNOLOGI REKAYASA KONSTRUKSI BANGUNAN GEDUNG	D4	UNIVERSITAS JEMBER (UNEJ)	560.45
+609	REKAYASA PERANCANGAN MEKANIK	D4	UNIVERSITAS JEMBER (UNEJ)	560.33
+610	TEKNOLOGI REKAYASA ELEKTRONIKA	D4	UNIVERSITAS JEMBER (UNEJ)	560.21
+611	ADMINISTRASI KEUANGAN	D3	UNIVERSITAS JEMBER (UNEJ)	559.67
+612	KEPERAWATAN	D3	UNIVERSITAS JEMBER (UNEJ)	560.03
+613	AKUNTANSI	D3	UNIVERSITAS JEMBER (UNEJ)	559.89
+614	PERPAJAKAN	D3	UNIVERSITAS JEMBER (UNEJ)	559.75
+615	KEPERAWATAN (KAMPUS KOTA PASURUAN)	D3	UNIVERSITAS JEMBER (UNEJ)	559.99
+616	MANAJEMEN PERUSAHAAN	D3	UNIVERSITAS JEMBER (UNEJ)	559.50
+617	KESEKRETARIATAN	D3	UNIVERSITAS JEMBER (UNEJ)	559.21
+618	USAHA PERJALANAN WISATA	D3	UNIVERSITAS JEMBER (UNEJ)	558.00
+619	MANAJEMEN SUMBERDAYA PERAIRAN	S1	UNIVERSITAS BRAWIJAYA (UB)	628.69
+620	BUDIDAYA PERAIRAN	S1	UNIVERSITAS BRAWIJAYA (UB)	613.38
+621	TEKNIK KONSTRUKSI SIPIL	D3	POLITEKNIK NEGERI BANDUNG	533.18
+622	TEKNIK MESIN	S1	UNIVERSITAS BRAWIJAYA (UB)	677.48
+623	TEKNIK ELEKTRO	S1	UNIVERSITAS BRAWIJAYA (UB)	683.48
+624	TEKNIK PENGAIRAN	S1	UNIVERSITAS BRAWIJAYA (UB)	663.38
+625	KEDOKTERAN	S1	UNIVERSITAS BRAWIJAYA (UB)	744.63
+626	TEKNOLOGI PANGAN	S1	UNIVERSITAS BRAWIJAYA (UB)	686.62
+627	BIOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	661.64
+628	FISIKA	S1	UNIVERSITAS BRAWIJAYA (UB)	651.85
+629	KIMIA	S1	UNIVERSITAS BRAWIJAYA (UB)	677.26
+630	MATEMATIKA	S1	UNIVERSITAS BRAWIJAYA (UB)	676.92
+631	PEMANFAATAN SUMBERDAYA PERIKANAN	S1	UNIVERSITAS BRAWIJAYA (UB)	609.03
+632	TEKNOLOGI HASIL PERIKANAN	S1	UNIVERSITAS BRAWIJAYA (UB)	609.30
+633	AGROBISNIS PERIKANAN	S1	UNIVERSITAS BRAWIJAYA (UB)	579.77
+634	TEKNIK PERTANIAN DAN BIOSISTEM	S1	UNIVERSITAS BRAWIJAYA (UB)	621.47
+635	STATISTIKA	S1	UNIVERSITAS BRAWIJAYA (UB)	693.97
+636	PERENCANAAN WILAYAH & KOTA	S1	UNIVERSITAS BRAWIJAYA (UB)	670.64
+637	TEKNIK INDUSTRI PERTANIAN	S1	UNIVERSITAS BRAWIJAYA (UB)	654.25
+638	ILMU KEPERAWATAN	S1	UNIVERSITAS BRAWIJAYA (UB)	637.78
+639	ILMU GIZI	S1	UNIVERSITAS BRAWIJAYA (UB)	677.41
+640	TEKNIK INDUSTRI	S1	UNIVERSITAS BRAWIJAYA (UB)	694.76
+641	AGROEKOTEKNOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	639.15
+642	AGRIBISNIS	S1	UNIVERSITAS BRAWIJAYA (UB)	648.14
+643	PETERNAKAN	S1	UNIVERSITAS BRAWIJAYA (UB)	619.49
+644	PENDIDIKAN DOKTER HEWAN	S1	UNIVERSITAS BRAWIJAYA (UB)	651.99
+645	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS BRAWIJAYA (UB)	705.62
+646	ILMU KELAUTAN	S1	UNIVERSITAS BRAWIJAYA (UB)	643.69
+647	KEBIDANAN	S1	UNIVERSITAS BRAWIJAYA (UB)	649.41
+648	TEKNIK KOMPUTER	S1	UNIVERSITAS BRAWIJAYA (UB)	668.29
+649	SISTEM INFORMASI	S1	UNIVERSITAS BRAWIJAYA (UB)	690.09
+650	TEKNIK KIMIA	S1	UNIVERSITAS BRAWIJAYA (UB)	681.12
+651	INSTRUMENTASI	S1	UNIVERSITAS BRAWIJAYA (UB)	656.01
+652	TEKNIK GEOFISIKA	S1	UNIVERSITAS BRAWIJAYA (UB)	665.50
+653	BIOTEKNOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	678.65
+654	TEKNOLOGI BIOPROSES	S1	UNIVERSITAS BRAWIJAYA (UB)	655.69
+655	TEKNIK LINGKUNGAN	S1	UNIVERSITAS BRAWIJAYA (UB)	677.80
+656	PENDIDIKAN TEKNOLOGI INFORMASI	S1	UNIVERSITAS BRAWIJAYA (UB)	560.28
+657	TEKNOLOGI INFORMASI	S1	UNIVERSITAS BRAWIJAYA (UB)	664.26
+658	AGROEKOTEKNOLOGI (PSDKU KEDIRI)	S1	UNIVERSITAS BRAWIJAYA (UB)	609.73
+659	AGRIBISNIS (PSDKU KEDIRI)	S1	UNIVERSITAS BRAWIJAYA (UB)	602.02
+660	PETERNAKAN (PSDKU KEDIRI)	S1	UNIVERSITAS BRAWIJAYA (UB)	540.71
+661	AKUAKULTUR (PSDKU KEDIRI)	S1	UNIVERSITAS BRAWIJAYA (UB)	602.12
+662	SOSIAL EKONOMI PERIKANAN (PSDKU KEDIRI)	S1	UNIVERSITAS BRAWIJAYA (UB)	562.95
+663	KEHUTANAN	S1	UNIVERSITAS BRAWIJAYA (UB)	592.65
+664	ILMU AKTUARIA	S1	UNIVERSITAS BRAWIJAYA (UB)	670.42
+665	ILMU HUKUM	S1	UNIVERSITAS BRAWIJAYA (UB)	642.30
+666	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS BRAWIJAYA (UB)	666.30
+667	ADMINISTRASI PUBLIK	S1	UNIVERSITAS BRAWIJAYA (UB)	656.05
+668	ADMINISTRASI BISNIS	S1	UNIVERSITAS BRAWIJAYA (UB)	652.56
+669	MANAJEMEN	S1	UNIVERSITAS BRAWIJAYA (UB)	666.07
+670	AKUNTANSI	S1	UNIVERSITAS BRAWIJAYA (UB)	690.15
+671	SOSIOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	642.40
+672	ILMU KOMUNIKASI	S1	UNIVERSITAS BRAWIJAYA (UB)	674.35
+673	PSIKOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	667.84
+674	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS BRAWIJAYA (UB)	682.87
+675	SASTRA INGGRIS	S1	UNIVERSITAS BRAWIJAYA (UB)	667.27
+676	SASTRA JEPANG	S1	UNIVERSITAS BRAWIJAYA (UB)	658.52
+677	BAHASA DAN SASTRA PRANCIS	S1	UNIVERSITAS BRAWIJAYA (UB)	627.91
+678	ILMU POLITIK	S1	UNIVERSITAS BRAWIJAYA (UB)	647.12
+679	ILMU PEMERINTAHAN	S1	UNIVERSITAS BRAWIJAYA (UB)	647.95
+680	PERPAJAKAN	S1	UNIVERSITAS BRAWIJAYA (UB)	662.97
+681	EKONOMI ISLAM	S1	UNIVERSITAS BRAWIJAYA (UB)	650.83
+682	EKONOMI, KEUANGAN DAN PERBANKAN	S1	UNIVERSITAS BRAWIJAYA (UB)	661.90
+683	ILMU PERPUSTAKAAN	S1	UNIVERSITAS BRAWIJAYA (UB)	634.05
+684	PARIWISATA	S1	UNIVERSITAS BRAWIJAYA (UB)	640.92
+685	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS BRAWIJAYA (UB)	636.44
+686	PENDIDIKAN BAHASA JEPANG	S1	UNIVERSITAS BRAWIJAYA (UB)	621.96
+687	PENDIDIKAN BHS & SASTRA INDONESIA	S1	UNIVERSITAS BRAWIJAYA (UB)	617.09
+688	ADMINISTRASI PENDIDIKAN	S1	UNIVERSITAS BRAWIJAYA (UB)	625.71
+689	SENI RUPA MURNI	S1	UNIVERSITAS BRAWIJAYA (UB)	583.99
+690	SASTRA CINA	S1	UNIVERSITAS BRAWIJAYA (UB)	642.17
+691	ANTROPOLOGI	S1	UNIVERSITAS BRAWIJAYA (UB)	643.97
+692	KEWIRAUSAHAAN	S1	UNIVERSITAS BRAWIJAYA (UB)	649.21
+693	SAINS DATA	S1	UNIVERSITAS BRAWIJAYA (UB)	607.89
+694	DESAIN GRAFIS	D4	UNIVERSITAS BRAWIJAYA (UB)	567.19
+695	MANAJEMEN PERHOTELAN	D4	UNIVERSITAS BRAWIJAYA (UB)	580.98
+696	KEUANGAN DAN PERBANKAN	D3	UNIVERSITAS BRAWIJAYA (UB)	540.50
+697	ADMINISTRASI BISNIS	D3	UNIVERSITAS BRAWIJAYA (UB)	540.33
+698	TEKNOLOGI INFORMASI	D3	UNIVERSITAS BRAWIJAYA (UB)	540.67
+699	TEKNIK PERTAMBANGAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	646.75
+700	TEKNIK KIMIA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	648.47
+701	TEKNIK MESIN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	612.74
+702	TEKNIK ELEKTRO	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	626.06
+703	PENDIDIKAN DOKTER	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	722.59
+704	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	681.99
+705	MATEMATIKA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	609.09
+706	FISIKA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	615.09
+707	KIMIA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	616.12
+708	BIOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	614.33
+709	AGRIBISNIS	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	601.31
+710	TEKNOLOGI HASIL PERTANIAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	583.81
+711	TEKNIK PERTANIAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	607.44
+712	PEND. MATEMATIKA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	620.82
+713	PEND BIOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	600.65
+714	PEND. KIMIA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	587.81
+715	PEND FISIKA	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	589.63
+716	ILMU KESEHATAN MASYARAKAT	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	617.54
+717	ILMU KELAUTAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	588.09
+718	BUDIDAYA PERAIRAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	566.04
+719	TEKNOLOGI HASIL PERIKANAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	591.53
+720	ILMU KEPERAWATAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	618.15
+721	PEND TEKNIK MESIN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	575.71
+722	SISTEM KOMPUTER	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	597.47
+723	SISTEM INFORMASI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	622.72
+724	AGROEKOTEKNOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	565.04
+725	PETERNAKAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	562.34
+726	TEKNIK GEOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	608.62
+727	PSIKOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	639.20
+728	ILMU TANAH	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	573.58
+729	AGRONOMI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	592.69
+730	PROTEKSI TANAMAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	565.68
+731	GIZI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	609.66
+732	KESEHATAN LINGKUNGAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	560.73
+733	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	598.91
+734	ILMU HUKUM	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	595.88
+735	MANAJEMEN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	625.81
+736	AKUNTANSI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	643.15
+737	ADMINISTRASI PUBLIK	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	598.91
+738	SOSIOLOGI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	586.97
+739	PPKN	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	585.33
+740	PEND SEJARAH	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	609.46
+741	PEND EKONOMI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	555.08
+742	PEND BHS, SATRA IND & DAERAH	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	524.14
+743	PEND BHS INGGRIS	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	632.21
+744	PENJASKES	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	554.25
+745	BIMB & KONSELING	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	604.95
+746	PGSD	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	598.39
+747	PAUD	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	535.75
+748	ILMU KOMUNIKASI	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	620.16
+749	PENDIDIKAN MASYARAKAT	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	599.57
+750	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS SRIWIJAYA (UNSRI)	635.12
+751	AKUNTANSI	D3	UNIVERSITAS SRIWIJAYA (UNSRI)	508.43
+752	TEKNIK KOMPUTER	D3	UNIVERSITAS SRIWIJAYA (UNSRI)	508.71
+753	KOMPUTERISASI AKUNTANSI	D3	UNIVERSITAS SRIWIJAYA (UNSRI)	508.67
+754	KESEKRETARIATAN	D3	UNIVERSITAS SRIWIJAYA (UNSRI)	508.20
+755	AGROTEKNOLOGI	S1	UNIVERSITAS LAMPUNG (UNILA)	608.26
+756	AGRIBISNIS	S1	UNIVERSITAS LAMPUNG (UNILA)	601.56
+757	TEKNIK GEOFISIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	637.08
+758	KIMIA	S1	UNIVERSITAS LAMPUNG (UNILA)	595.13
+759	BIOLOGI	S1	UNIVERSITAS LAMPUNG (UNILA)	605.58
+760	TEKNOLOGI HASIL PERTANIAN	S1	UNIVERSITAS LAMPUNG (UNILA)	581.60
+761	PETERNAKAN	S1	UNIVERSITAS LAMPUNG (UNILA)	567.10
+762	KEHUTANAN	S1	UNIVERSITAS LAMPUNG (UNILA)	578.84
+763	TEKNIK PERTANIAN	S1	UNIVERSITAS LAMPUNG (UNILA)	595.41
+764	MATEMATIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	618.33
+765	FISIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	569.42
+766	TEKNIK MESIN	S1	UNIVERSITAS LAMPUNG (UNILA)	610.82
+767	TEKNIK ELEKTRO	S1	UNIVERSITAS LAMPUNG (UNILA)	611.11
+768	PEND. MATEMATIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	629.11
+769	PEND. FISIKA	S1	UNIVERSITAS LAMPUNG (UNILA)	589.01
+770	PEND. KIMIA	S1	UNIVERSITAS LAMPUNG (UNILA)	594.40
+771	PEND. BIOLOGI	S1	UNIVERSITAS LAMPUNG (UNILA)	599.72
+772	TEKNIK KIMIA	S1	UNIVERSITAS LAMPUNG (UNILA)	627.38
+773	PEND. KEDOKTERAN	S1	UNIVERSITAS LAMPUNG (UNILA)	708.23
+774	BUDIDAYA PERAIRAN	S1	UNIVERSITAS LAMPUNG (UNILA)	593.60
+775	ILMU KOMPUTER	S1	UNIVERSITAS LAMPUNG (UNILA)	607.08
+776	TEKNIK GEODESI	S1	UNIVERSITAS LAMPUNG (UNILA)	588.07
+777	SUMBERDAYA AKUATIK	S1	UNIVERSITAS LAMPUNG (UNILA)	560.94
+778	ILMU TANAH	S1	UNIVERSITAS LAMPUNG (UNILA)	560.67
+779	AGRONOMI	S1	UNIVERSITAS LAMPUNG (UNILA)	576.38
+780	PROTEKSI TANAMAN	S1	UNIVERSITAS LAMPUNG (UNILA)	556.35
+781	PENYULUHAN PERTANIAN	S1	UNIVERSITAS LAMPUNG (UNILA)	578.30
+782	ILMU KELAUTAN	S1	UNIVERSITAS LAMPUNG (UNILA)	606.89
+783	TEKNOLOGI INDUSTRI PERTANIAN	S1	UNIVERSITAS LAMPUNG (UNILA)	599.08
+784	NUTRISI DAN TEKNOLOGI PAKAN TERNAK	S1	UNIVERSITAS LAMPUNG (UNILA)	569.16
+785	PENDIDIKAN TEKNOLOGI INFORMASI	S1	UNIVERSITAS LAMPUNG (UNILA)	514.04
+786	BIOLOGI TERAPAN	S1	UNIVERSITAS LAMPUNG (UNILA)	585.60
+787	TEKNIK LINGKUNGAN	S1	UNIVERSITAS LAMPUNG (UNILA)	596.17
+788	HUKUM	S1	UNIVERSITAS LAMPUNG (UNILA)	592.12
+789	SOSIOLOGI	S1	UNIVERSITAS LAMPUNG (UNILA)	598.26
+790	ILMU PEMERINTAHAN	S1	UNIVERSITAS LAMPUNG (UNILA)	639.54
+791	MANAJEMEN	S1	UNIVERSITAS LAMPUNG (UNILA)	626.22
+792	IESP	S1	UNIVERSITAS LAMPUNG (UNILA)	604.39
+793	AKUNTANSI	S1	UNIVERSITAS LAMPUNG (UNILA)	639.74
+794	ILMU KOMUNIKASI	S1	UNIVERSITAS LAMPUNG (UNILA)	621.45
+795	ILMU ADM. NEGARA	S1	UNIVERSITAS LAMPUNG (UNILA)	620.47
+796	ILMU ADM. NIAGA/BISNIS	S1	UNIVERSITAS LAMPUNG (UNILA)	638.89
+797	PPKN	S1	UNIVERSITAS LAMPUNG (UNILA)	586.09
+798	PEND. SEJARAH	S1	UNIVERSITAS LAMPUNG (UNILA)	609.50
+799	PEND. GEOGRAFI	S1	UNIVERSITAS LAMPUNG (UNILA)	608.63
+800	PEND. EKONOMI	S1	UNIVERSITAS LAMPUNG (UNILA)	625.90
+801	PENDIDIKAN JASMANI	S1	UNIVERSITAS LAMPUNG (UNILA)	555.47
+802	BIMB. KONSELING	S1	UNIVERSITAS LAMPUNG (UNILA)	582.32
+803	PEND. BAHASA INDONESIA	S1	UNIVERSITAS LAMPUNG (UNILA)	608.82
+804	PEND. B. INGGRIS	S1	UNIVERSITAS LAMPUNG (UNILA)	633.21
+805	PGSD	S1	UNIVERSITAS LAMPUNG (UNILA)	562.11
+806	PENDIDIKAN TARI	S1	UNIVERSITAS LAMPUNG (UNILA)	559.74
+807	PENDIDIKAN ANAK USIA DINI	S1	UNIVERSITAS LAMPUNG (UNILA)	572.02
+808	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS LAMPUNG (UNILA)	620.21
+809	BAHASA PERANCIS	S1	UNIVERSITAS LAMPUNG (UNILA)	577.87
+810	PENDIDIKAN MUSIK	S1	UNIVERSITAS LAMPUNG (UNILA)	536.22
+811	PENDIDIKAN BAHASA LAMPUNG	S1	UNIVERSITAS LAMPUNG (UNILA)	533.67
+812	BISNIS DIGITAL	S1	UNIVERSITAS LAMPUNG (UNILA)	597.67
+813	SISTEM INFORMASI	S1	UNIVERSITAS LAMPUNG (UNILA)	515.31
+814	TEKNIK GEOLOGI	S1	UNIVERSITAS LAMPUNG (UNILA)	545.03
+815	ILMU KOMPUTER PSDKU WAY KANAN	S1	UNIVERSITAS LAMPUNG (UNILA)	600.75
+816	TEKNOLOGI REKAYASA OTOMOTIF	D4	UNIVERSITAS LAMPUNG (UNILA)	514.00
+817	MANAJEMEN PEMASARAN	D3	UNIVERSITAS LAMPUNG (UNILA)	512.99
+818	ADMINISTRASI PERKANTORAN	D3	UNIVERSITAS LAMPUNG (UNILA)	512.89
+819	PERPUSTAKAAN	D3	UNIVERSITAS LAMPUNG (UNILA)	512.67
+820	TEKNIK MESIN	D3	UNIVERSITAS LAMPUNG (UNILA)	513.89
+821	TEKNIK SURVEY DAN PEMETAAN	D3	UNIVERSITAS LAMPUNG (UNILA)	513.76
+822	PERPAJAKAN	D3	UNIVERSITAS LAMPUNG (UNILA)	513.11
+823	KEUANGAN DAN PERBANKAN	D3	UNIVERSITAS LAMPUNG (UNILA)	513.23
+824	HUBUNGAN MASYARAKAT	D3	UNIVERSITAS LAMPUNG (UNILA)	513.33
+825	AKUNTANSI	D3	UNIVERSITAS LAMPUNG (UNILA)	513.50
+826	AKUNTANSI PSDKU WAY KANAN	D3	UNIVERSITAS LAMPUNG (UNILA)	600.75
+827	PERBANKAN DAN KEUANGAN PSDKU LAMPUNG TENGAH	D3	UNIVERSITAS LAMPUNG (UNILA)	600.75
+828	PENDIDIKAN DOKTER	S1	UNIVERSITAS INDONESIA (UI)	785.00
+829	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS INDONESIA (UI)	723.21
+830	MATEMATIKA	S1	UNIVERSITAS INDONESIA (UI)	722.14
+831	FISIKA	S1	UNIVERSITAS INDONESIA (UI)	712.02
+832	KIMIA	S1	UNIVERSITAS INDONESIA (UI)	714.55
+833	BIOLOGI	S1	UNIVERSITAS INDONESIA (UI)	697.04
+834	GEOGRAFI	S1	UNIVERSITAS INDONESIA (UI)	690.30
+835	TEKNIK SIPIL	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	527.25
+836	TEKNIK MESIN	S1	UNIVERSITAS INDONESIA (UI)	715.12
+837	TEKNIK ELEKTRO	S1	UNIVERSITAS INDONESIA (UI)	713.54
+838	TEKNIK METALURGI & MATERIAL	S1	UNIVERSITAS INDONESIA (UI)	724.36
+839	TEKNIK KIMIA	S1	UNIVERSITAS INDONESIA (UI)	717.60
+840	ILMU KEPERAWATAN	S1	UNIVERSITAS INDONESIA (UI)	681.75
+841	ILMU KOMPUTER	S1	UNIVERSITAS INDONESIA (UI)	747.76
+842	ILMU KESEHATAN MASYARAKAT	S1	UNIVERSITAS INDONESIA (UI)	711.16
+843	TEKNIK INDUSTRI	S1	UNIVERSITAS INDONESIA (UI)	724.94
+844	TEKNIK PERKAPALAN	S1	UNIVERSITAS INDONESIA (UI)	689.47
+845	TEKNIK LINGKUNGAN	S1	UNIVERSITAS INDONESIA (UI)	710.22
+846	TEKNIK KOMPUTER	S1	UNIVERSITAS INDONESIA (UI)	714.66
+847	SISTEM INFORMASI	S1	UNIVERSITAS INDONESIA (UI)	722.67
+848	TEKNOLOGI BIOPROSES	S1	UNIVERSITAS INDONESIA (UI)	714.34
+849	GIZI	S1	UNIVERSITAS INDONESIA (UI)	714.02
+850	KESEHATAN LINGKUNGAN	S1	UNIVERSITAS INDONESIA (UI)	703.95
+851	KESELAMATAN DAN KESEHATAN KERJA	S1	UNIVERSITAS INDONESIA (UI)	707.64
+852	GEOFISIKA	S1	UNIVERSITAS INDONESIA (UI)	696.63
+853	GEOLOGI	S1	UNIVERSITAS INDONESIA (UI)	699.75
+854	STATISTIKA	S1	UNIVERSITAS INDONESIA (UI)	717.44
+855	AKTUARIA	S1	UNIVERSITAS INDONESIA (UI)	743.49
+856	SAINS BIOMEDIS	S1	INSTITUT PERTANIAN BOGOR (IPB)	642.31
+857	ILMU HUKUM	S1	UNIVERSITAS INDONESIA (UI)	708.85
+858	ARKEOLOGI INDONESIA	S1	UNIVERSITAS INDONESIA (UI)	667.94
+859	ILMU SEJARAH	S1	UNIVERSITAS INDONESIA (UI)	698.84
+860	ILMU PSIKOLOGI	S1	UNIVERSITAS INDONESIA (UI)	726.24
+861	ILMU KOMUNIKASI	S1	UNIVERSITAS INDONESIA (UI)	704.96
+862	ILMU POLITIK	S1	UNIVERSITAS INDONESIA (UI)	696.98
+863	ILMU ADMINISTRASI NEGARA	S1	UNIVERSITAS INDONESIA (UI)	692.22
+864	KRIMINOLOGI	S1	UNIVERSITAS INDONESIA (UI)	703.09
+865	SOSIOLOGI	S1	UNIVERSITAS INDONESIA (UI)	695.64
+866	ILMU KESEJAHTERAAN SOSIAL	S1	UNIVERSITAS INDONESIA (UI)	695.74
+867	ANTROPOLOGI SOSIAL	S1	UNIVERSITAS INDONESIA (UI)	700.67
+868	ILMU EKONOMI	S1	UNIVERSITAS INDONESIA (UI)	723.77
+869	ILMU ADMINISTRASI NIAGA	S1	UNIVERSITAS INDONESIA (UI)	678.86
+870	ILMU ADMINISTRASI FISKAL	S1	UNIVERSITAS INDONESIA (UI)	707.61
+871	MANAJEMEN	S1	UNIVERSITAS INDONESIA (UI)	717.40
+872	AKUNTANSI	S1	UNIVERSITAS INDONESIA (UI)	726.05
+873	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS INDONESIA (UI)	751.82
+874	ILMU PERPUSTAKAAN	S1	UNIVERSITAS INDONESIA (UI)	700.87
+875	ILMU FILSAFAT	S1	UNIVERSITAS INDONESIA (UI)	666.38
+876	SASTRA INDONESIA	S1	UNIVERSITAS INDONESIA (UI)	684.68
+877	SASTRA DAERAH UNTUK SASTRA JAWA	S1	UNIVERSITAS INDONESIA (UI)	650.89
+878	SASTRA JEPANG	S1	UNIVERSITAS INDONESIA (UI)	695.48
+879	SASTRA CINA	S1	UNIVERSITAS INDONESIA (UI)	669.16
+880	SASTRA ARAB	S1	UNIVERSITAS INDONESIA (UI)	691.96
+881	SASTRA PERANCIS	S1	UNIVERSITAS INDONESIA (UI)	673.66
+882	SASTRA INGGRIS	S1	UNIVERSITAS INDONESIA (UI)	692.94
+883	SASTRA JERMAN	S1	UNIVERSITAS INDONESIA (UI)	693.78
+884	SASTRA BELANDA	S1	UNIVERSITAS INDONESIA (UI)	668.77
+885	SASTRA RUSIA	S1	UNIVERSITAS INDONESIA (UI)	665.47
+886	BAHASA DAN KEBUDAYAAN KOREA	S1	UNIVERSITAS INDONESIA (UI)	696.47
+887	ILMU EKONOMI ISLAM	S1	UNIVERSITAS INDONESIA (UI)	716.38
+888	BISNIS ISLAM	S1	UNIVERSITAS INDONESIA (UI)	699.02
+889	MANAJEMEN BISNIS PARIWISATA	D4	UNIVERSITAS INDONESIA (UI)	650.52
+890	TERAPI OKUPASI	D4	UNIVERSITAS INDONESIA (UI)	650.67
+891	FISIOTERAPI	D4	UNIVERSITAS INDONESIA (UI)	650.75
+892	MANAJEMEN REKOD DAN ARSIP	D4	UNIVERSITAS INDONESIA (UI)	650.47
+893	BISNIS KREATIF	D4	UNIVERSITAS INDONESIA (UI)	650.33
+894	PRODUKSI MEDIA	D4	UNIVERSITAS INDONESIA (UI)	650.20
+895	ADMINISTRASI PERPAJAKAN	D3	UNIVERSITAS INDONESIA (UI)	649.25
+896	ADMINISTRASI PERKANTORAN	D3	UNIVERSITAS INDONESIA (UI)	649.17
+897	ADMINISTRASI RUMAH SAKIT	D3	UNIVERSITAS INDONESIA (UI)	648.99
+898	PENYIARAN MULTIMEDIA	D3	UNIVERSITAS INDONESIA (UI)	649.33
+899	ADMINISTRASI ASURANSI & AKTUARIA	D3	UNIVERSITAS INDONESIA (UI)	648.89
+900	HUBUNGAN MASYARAKAT	D3	UNIVERSITAS INDONESIA (UI)	649.89
+901	PERIKLANAN KREATIF	D3	UNIVERSITAS INDONESIA (UI)	649.67
+902	AKUNTANSI	D3	UNIVERSITAS INDONESIA (UI)	650.00
+903	ADMINISTRASI KEUANGAN DAN PERBANKAN	D3	UNIVERSITAS INDONESIA (UI)	648.67
+904	TEKNIK ELEKTRONIKA	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	561.75
+905	TEKNIK TELEKOMUNIKASI	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	559.78
+906	TEKNIK ELEKTRO INDUSTRI	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	560.66
+907	TEKNIK KOMPUTER	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	560.78
+908	TEKNIK MEKATRONIKA	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	558.65
+909	SISTEM PEMBANGKIT ENERGI	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	562.56
+910	TEKNOLOGI GAME	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.89
+911	TEKNOLOGI REKAYASA INTERNET	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.72
+912	TEKNOLOGI REKAYASA MULTIMEDIA	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.66
+913	SAINS DATA TERAPAN	D4	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.50
+914	TEKNOLOGI MULTIMEDIA BROADCASTING (KAMPUS KAB LAMONGAN)	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	556.89
+915	TEKNIK ELEKTRO INDUSTRI	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.42
+916	TEKNOLOGI REKAYASA INFORMATIKA INDUSTRI	D4	POLITEKNIK MANUFAKTUR BANDUNG	537.50
+917	TEKNIK ELEKTRONIKA	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.32
+918	TEKNOLOGI MULTIMEDIA BROADCASTING (KAMPUS KAB. SUMENEP)	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	556.50
+919	TEKNOLOGI MULTIMEDIA DAN BROADCASTING	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.29
+920	TEKNIK TELEKOMUNIKASI	D3	POLITEKNIK ELEKTRONIKA NEGERI SURABAYA (PENS)	557.06
+921	TEKNIK MESIN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	646.73
+922	TEKNIK PERKAPALAN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	639.76
+923	TEKNIK INDUSTRI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	662.61
+924	SISTEM INFORMASI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	654.87
+925	KEDOKTERAN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	722.31
+926	KEPERAWATAN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	639.87
+927	KESEHATAN MASYARAKAT	S1	UPN "VETERAN" JAKARTA (UPNVJ)	653.85
+928	GIZI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	654.20
+929	TEKNIK ELEKTRO	S1	UPN "VETERAN" JAKARTA (UPNVJ)	637.76
+930	FISIOTERAPI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	636.17
+931	MANAJEMEN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	648.06
+932	AKUNTANSI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	657.30
+933	HUBUNGAN INTERNASIONAL	S1	UPN "VETERAN" JAKARTA (UPNVJ)	656.24
+934	ILMU KOMUNIKASI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	651.89
+935	HUKUM	S1	UPN "VETERAN" JAKARTA (UPNVJ)	635.69
+936	EKONOMI PEMBANGUNAN	S1	UPN "VETERAN" JAKARTA (UPNVJ)	651.99
+937	EKONOMI SYARIAH	S1	UPN "VETERAN" JAKARTA (UPNVJ)	625.80
+938	ILMU POLITIK	S1	UPN "VETERAN" JAKARTA (UPNVJ)	618.82
+939	SAINS INFORMASI	S1	UPN "VETERAN" JAKARTA (UPNVJ)	646.67
+940	KEPERAWATAN	D3	UPN "VETERAN" JAKARTA (UPNVJ)	618.67
+941	FISIOTERAPI	D3	UPN "VETERAN" JAKARTA (UPNVJ)	618.75
+942	SISTEM INFORMASI	D3	UPN "VETERAN" JAKARTA (UPNVJ)	618.50
+943	PERBANKAN DAN KEUANGAN	D3	UPN "VETERAN" JAKARTA (UPNVJ)	617.72
+944	AKUNTANSI	D3	UPN "VETERAN" JAKARTA (UPNVJ)	617.89
+945	AGROTEKNOLOGI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	615.23
+946	TEKNIK INDUSTRI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	616.50
+947	TEKNIK MESIN	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	592.73
+948	TEKNIK ELEKTRO	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	603.56
+949	TEKNIK INFORMATIKA	D3	POLITEKNIK NEGERI BANDUNG	532.89
+950	PEND. MATEMATIKA	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	575.36
+951	AGRIBISNIS	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	598.69
+952	GIZI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	595.11
+953	TEKNIK KIMIA	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	617.92
+954	ILMU KEOLAHRAGAAN	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	533.80
+955	SISTEM INFORMASI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	613.34
+956	TEKNIK LINGKUNGAN	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	577.11
+957	ILMU HUKUM	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	587.77
+958	MANAJEMEN	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	610.71
+959	AKUNTANSI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	619.69
+960	PENDIDIKAN MASYARAKAT	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	597.62
+961	PEND. BAHASA INGGRIS	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	598.91
+962	PEND. JASMANI, KESEHATAN DAN REKREASI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	509.40
+963	PEND. BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	570.85
+964	ILMU PEMERINTAHAN	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	605.18
+965	ILMU KOMUNIKASI	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	603.86
+966	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	562.68
+967	ADMINISTRASI RUMAH SAKIT	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	642.39
+968	FISIKA	S1	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	522.99
+969	AKUNTANSI	D3	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	508.89
+970	TEKNIK MESIN	D3	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	509.33
+971	KEBIDANAN	D3	UNIVERSITAS SINGAPERBANGSA KARAWANG (UNSIKA)	509.23
+972	FAKULTAS ILMU DAN TEKNOLOGI KEBUMIAN (FITB)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	707.40
+973	FAKULTAS TEKNIK PERTAMBANGAN DAN PERMINYAKAN (FTTM)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	713.77
+974	SEKOLAH ILMU DAN TEKNOLOGI HAYATI - SAINS (SITH-S)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	714.93
+975	FAKULTAS TEKNIK MESIN DAN DIRGANTARA (FTMD)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	738.67
+976	SEKOLAH ILMU DAN TEKNOLOGI HAYATI - REKAYASA (SITH-R)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	706.81
+977	FAKULTAS TEKNOLOGI INDUSTRI - KAMPUS CIREBON (FTI-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	699.65
+978	FAKULTAS TEKNIK PERTAMBANGAN DAN PERMINYAKAN - KAMPUS CIREBON (FTTM-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	667.54
+979	FAKULTAS ILMU DAN TEKNOLOGI KEBUMIAN - KAMPUS CIREBON (FITB-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	664.78
+980	FAKULTAS MATEMATIKA DAN ILMU PENGETAHUAN ALAM - MATEMATIKA (FMIPA-M)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	719.86
+981	FAKULTAS MATEMATIKA DAN ILMU PENGETAHUAN ALAM - IPA (FMIPA-IPA)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	719.86
+982	FAKULTAS SENIRUPA DAN DESAIN (FSRD)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	702.40
+983	SEKOLAH BISNIS DAN MANAJEMEN (SBM)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	723.83
+984	FAKULTAS SENIRUPA DAN DESAIN - KAMPUS CIREBON (FSRD-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	669.15
+985	FAKULTAS TEKNOLOGI INDUSTRI - SISTEM DAN PROSES (FTI-SP)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	743.25
+986	FAKULTAS TEKNOLOGI INDUSTRI - REKAYASA INDUSTRI (FTI-RI)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	745.57
+987	SEKOLAH ILMU DAN TEKNOLOGI HAYATI - KAMPUS CIREBON (SITH-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	700.90
+988	SEKOLAH BISNIS DAN MANAJEMEN - KAMPUS CIREBON (SBM-C)	S1	INSTITUT TEKNOLOGI BANDUNG (ITB)	689.37
+989	PENDIDIKAN DOKTER	S1	UNIVERSITAS PADJADJARAN (UNPAD)	756.03
+990	MATEMATIKA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	687.31
+991	KIMIA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	689.54
+992	FISIKA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	673.52
+993	BIOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	673.07
+994	STATISTIKA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	692.84
+995	AGROTEKNOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	655.84
+996	AGRIBISNIS	S1	UNIVERSITAS PADJADJARAN (UNPAD)	666.55
+997	PENDIDIKAN DOKTER GIGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	713.11
+998	ILMU PETERNAKAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	610.84
+999	PERIKANAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	608.53
+1000	ILMU KEPERAWATAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	665.48
+1001	ILMU KELAUTAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	647.40
+1002	TEKNOLOGI PANGAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	692.34
+1003	TEKNIK PERTANIAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	649.68
+1004	TEKNIK GEOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	684.90
+1005	PSIKOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	719.43
+1006	GEOFISIKA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	681.69
+1007	TEKNOLOGI INDUSTRI PERTANIAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	660.83
+1008	TEKNIK ELEKTRO	S1	UNIVERSITAS PADJADJARAN (UNPAD)	680.44
+1009	KEDOKTERAN HEWAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	655.89
+1010	ILMU AKTUARIA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	707.97
+1011	PERIKANAN PSDKU PANGANDARAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	597.84
+1012	PETERNAKAN PSDKU PANGANDARAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	567.67
+1013	KEPERAWATAN PSDKU PANGANDARAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	582.16
+1014	ILMU HUKUM	S1	UNIVERSITAS PADJADJARAN (UNPAD)	682.40
+1015	AKUNTANSI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	699.45
+1016	ILMU EKONOMI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	681.89
+1017	MANAJEMEN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	683.71
+1018	ADMINISTRASI PUBLIK	S1	UNIVERSITAS PADJADJARAN (UNPAD)	674.96
+1019	ILMU HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS PADJADJARAN (UNPAD)	706.43
+1020	ILMU KESEJAHTERAAN SOSIAL	S1	UNIVERSITAS PADJADJARAN (UNPAD)	637.53
+1021	ILMU PEMERINTAHAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	680.68
+1022	ANTROPOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	656.48
+1023	ILMU ADMINISTRASI BISNIS	S1	UNIVERSITAS PADJADJARAN (UNPAD)	687.67
+1024	SASTRA INDONESIA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	641.49
+1025	SASTRA SUNDA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	607.82
+1026	ILMU SEJARAH	S1	UNIVERSITAS PADJADJARAN (UNPAD)	641.38
+1027	SASTRA INGGRIS	S1	UNIVERSITAS PADJADJARAN (UNPAD)	671.80
+1028	SASTRA PERANCIS	S1	UNIVERSITAS PADJADJARAN (UNPAD)	650.80
+1029	SASTRA JEPANG	S1	UNIVERSITAS PADJADJARAN (UNPAD)	660.56
+1030	SASTRA RUSIA	S1	UNIVERSITAS PADJADJARAN (UNPAD)	628.03
+1031	SASTRA JERMAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	650.56
+1032	SASTRA ARAB	S1	UNIVERSITAS PADJADJARAN (UNPAD)	637.93
+1033	ILMU KOMUNIKASI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	677.73
+1034	ILMU PERPUSTAKAAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	639.88
+1035	SOSIOLOGI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	657.57
+1036	ILMU POLITIK	S1	UNIVERSITAS PADJADJARAN (UNPAD)	656.87
+1037	HUBUNGAN MASYARAKAT	S1	UNIVERSITAS PADJADJARAN (UNPAD)	678.90
+1038	EKONOMI ISLAM	S1	UNIVERSITAS PADJADJARAN (UNPAD)	674.68
+1039	MANAJEMEN KOMUNIKASI	S1	UNIVERSITAS PADJADJARAN (UNPAD)	684.02
+1040	JURNALISTIK	S1	UNIVERSITAS PADJADJARAN (UNPAD)	674.14
+1041	TELEVISI DAN FILM	S1	UNIVERSITAS PADJADJARAN (UNPAD)	661.32
+1042	BISNIS DIGITAL	S1	UNIVERSITAS PADJADJARAN (UNPAD)	688.99
+1043	ADMINISTRASI BISNIS PSDKU PANGANDARAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	620.16
+1044	ILMU KOMUNIKASI PSDKU PANGANDARAN	S1	UNIVERSITAS PADJADJARAN (UNPAD)	634.58
+1045	AKUNTANSI PERPAJAKAN	D4	UNIVERSITAS PADJADJARAN (UNPAD)	524.54
+1046	AKUNTANSI SEKTOR PUBLIK	D4	UNIVERSITAS PADJADJARAN (UNPAD)	531.82
+1047	BISNIS INTERNASIONAL	D4	UNIVERSITAS PADJADJARAN (UNPAD)	534.94
+1048	PEMASARAN DIGITAL	D4	UNIVERSITAS PADJADJARAN (UNPAD)	560.03
+1049	KEBIDANAN	D4	UNIVERSITAS PADJADJARAN (UNPAD)	648.85
+1050	TEKNOLOGI INDUSTRI KIMIA	D4	UNIVERSITAS PADJADJARAN (UNPAD)	662.64
+1051	AGROTEKNOPRENEUR	D4	UNIVERSITAS PADJADJARAN (UNPAD)	633.32
+1052	ADMINISTRASI KEUANGAN PUBLIK	D4	UNIVERSITAS PADJADJARAN (UNPAD)	622.26
+1053	ADMINISTRASI PEMERINTAHAN	D4	UNIVERSITAS PADJADJARAN (UNPAD)	614.93
+1054	BISNIS LOGISTIK	D4	UNIVERSITAS PADJADJARAN (UNPAD)	633.32
+1055	KEARSIPAN DIGITAL	D4	UNIVERSITAS PADJADJARAN (UNPAD)	613.77
+1056	BAHASA DAN BUDAYA TIONGKOK	D4	UNIVERSITAS PADJADJARAN (UNPAD)	613.77
+1057	MANAJEMEN PRODUKSI MEDIA	D4	UNIVERSITAS PADJADJARAN (UNPAD)	623.54
+1058	PARIWISATA BAHARI	D4	UNIVERSITAS PADJADJARAN (UNPAD)	613.77
+1059	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	662.95
+1060	PENDIDIKAN FISIKA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	644.59
+1061	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	652.94
+1062	PENDIDIKAN KIMIA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	647.26
+1063	PENDIDIKAN ILMU KOMPUTER	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	630.68
+1064	MATEMATIKA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	675.11
+1065	FISIKA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	660.24
+1066	BIOLOGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	664.19
+1067	KIMIA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	678.00
+1068	ILMU KOMPUTER	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	672.93
+1069	PENDIDIKAN TEKNIK BANGUNAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	628.07
+1070	PENDIDIKAN TEKNIK ELEKTRO	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	624.98
+1071	PENDIDIKAN TEKNIK MESIN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	610.14
+1072	ILMU KEOLAHRAGAAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	590.76
+1073	TEKNIK ELEKTRO	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	662.30
+1074	PENDIDIKAN TEKNOLOGI AGRO INDUSTRI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	592.50
+1075	PENDIDIKAN ILMU PENGETAHUAN ALAM	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	639.73
+1076	ARSITEKTUR	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	539.47
+1077	PENDIDIKAN KELAUTAN DAN PERIKANAN KAMPUS SERANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	559.21
+1078	PENDIDIKAN MULTIMEDIA KAMPUS CIBIRU	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	577.41
+1079	PENDIDIKAN SISTEM DAN TEKNOLOGI INFORMASI KAMPUS PURWAKARTA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	574.28
+1080	PENDIDIKAN TEKNIK OTOMOTIF	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	601.35
+1081	SISTEM INFORMASI KELAUTAN KAMPUS SERANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	560.94
+1082	KEPELATIHAN FISIK OLAHRAGA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	567.51
+1083	REKAYASA PERANGKAT LUNAK (KAMPUS UPI CIBIRU)	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	565.79
+1084	SISTEM TELEKOMUNIKASI (KAMPUS UPI PURWAKARTA)	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	558.87
+1085	KEPERAWATAN - KAMPUS SUMEDANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	558.17
+1086	TEKNIK LOGISTIK	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	562.67
+1087	PENDIDIKAN TEKNIK OTOMASI INDUSTRI DAN ROBOTIKA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	561.17
+1088	TEKNIK KOMPUTER - KAMPUS CIBIRU	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	557.89
+1089	LOGISTIK KELAUTAN - KAMPUS SERANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	557.50
+1090	GIZI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	623.18
+1091	MEKATRONIKA DAN KECERDASAN BUATAN - KAMPUS UPI DI PURWAKARTA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	567.54
+1092	KEPERAWATAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	582.67
+1093	ADMINISTRASI PENDIDIKAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	628.24
+1094	BIMBINGAN DAN KONSELING	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	622.02
+1095	PENDIDIKAN MASYARAKAT	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	617.26
+1096	PENDIDIKAN KHUSUS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	588.02
+1097	TEKNOLOGI PENDIDIKAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	627.46
+1098	PSIKOLOGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	659.57
+1099	PKN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	595.26
+1100	PENDIDIKAN SEJARAH	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	611.87
+1101	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	614.34
+1102	ILMU PENDIDIKAN AGAMA ISLAM	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	616.17
+1103	MANAJEMEN RESORT DAN LEISURE	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	629.61
+1104	MANAJEMEN PEMASARAN PARIWISATA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	633.78
+1105	MANAJEMEN INDUSTRI KATERING	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	626.90
+1106	PENDIDIKAN BHS.DAN SASTRA INDONESIA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	622.10
+1107	PENDIDIKAN BAHASA SUNDA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	588.45
+1108	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	650.89
+1109	PENDIDIKAN BAHASA ARAB	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	611.86
+1110	PENDIDIKAN BAHASA JEPANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	636.95
+1111	PENDIDIKAN BAHASA JERMAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	626.87
+1112	PENDIDIKAN BAHASA PERANCIS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	613.43
+1113	PENDIDIKAN SENI RUPA DAN KERAJINAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	604.43
+1114	PENDIDIKAN SENI TARI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	514.38
+1115	PENDIDIKAN SENI MUSIK	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	595.29
+1116	BAHASA DAN SASTRA INGGRIS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	651.73
+1117	BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	616.92
+1118	PENDIDIKAN KESEJAHTERAAN KELUARGA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	600.06
+1119	PENDIDIKAN TATA BOGA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	626.59
+1120	PENDIDIKAN TATA BUSANA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	615.56
+1121	PENDIDIKAN KEPELATIHAN OLAHRAGA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	566.56
+1122	PEND. JASMANI KESEHATAN & REKREASI (PJKR)	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	571.70
+1123	PENDIDIKAN AKUNTANSI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	632.79
+1124	PENDIDIKAN BISNIS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	612.37
+1125	PENDIDIKAN MANAJEMEN PERKANTORAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	621.51
+1126	PENDIDIKAN EKONOMI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	627.83
+1127	MANAJEMEN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	650.95
+1128	AKUNTANSI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	666.50
+1129	PERPUSTAKAAN DAN SAINS INFORMASI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	633.84
+1130	PENDIDIKAN IPS	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	607.43
+1131	PENDIDIKAN SOSIOLOGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	619.72
+1132	PGSD PEND. JASMANI KAMPUS BUMI SILIWANGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	554.11
+1133	PGSD KAMPUS CIBIRU	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	604.21
+1134	PGPAUD KAMPUS CIBIRU	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	578.36
+1135	PGSD KAMPUS SUMEDANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	603.51
+1136	PGSD PENDIDIKAN JASMANI KAMPUS SUMEDANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	510.48
+1137	PGSD KAMPUS PURWAKARTA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	594.87
+1138	PGSD KAMPUS TASIKMALAYA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	553.37
+1139	PGSD KAMPUS SERANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	548.72
+1140	PGSD KAMPUS BUMI SILIWANGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	612.14
+1141	PGPAUD KAMPUS BUMI SILIWANGI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	562.41
+1142	ILMU KOMUNIKASI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	669.89
+1143	PGPAUD KAMPUS SERANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	526.62
+1144	ILMU EKONOMI DAN KEUANGAN ISLAM	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	631.07
+1145	PGPAUD KAMPUS TASIKMALAYA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	537.76
+1146	PGPAUD KAMPUS PURWAKARTA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	529.37
+1147	PENDIDIKAN BAHASA KOREA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	651.92
+1148	KEWIRAUSAHAAN KAMPUS TASIKMALAYA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	608.58
+1149	SAINS INFORMASI GEOGRAFI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	647.33
+1150	DESAIN KOMUNIKASI VISUAL	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	609.57
+1151	PENDIDIKAN PARIWISATA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	585.73
+1152	FILM DAN TELEVISI	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	543.93
+1153	BISNIS DIGITAL (KAMPUS UPI TASIKMALAYA)	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	605.08
+1154	MUSIK	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	559.67
+1155	INDUSTRI PARIWISATA KAMPUS SUMEDANG	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	625.17
+1156	DESAIN PRODUK INDUSTRI - KAMPUS UPI DI TASIKMALAYA	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	537.89
+1157	KEDOKTERAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	687.06
+1158	TEKNOLOGI PANGAN	S1	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	562.17
+1159	SURVEI PEMETAAN DAN INFORMASI GEOGRAFIS	D4	UNIVERSITAS PENDIDIKAN INDONESIA (UPI)	557.00
+1160	TARI	S1	ISBI BANDUNG	568.47
+1161	KARAWITAN	S1	ISBI BANDUNG	629.35
+1162	TEATER	S1	ISBI BANDUNG	563.68
+1163	SENI MURNI	S1	ISBI BANDUNG	591.93
+1164	ANTROPOLOGI BUDAYA	S1	ISBI BANDUNG	586.00
+1165	KRIYA	S1	ISBI BANDUNG	507.50
+1166	DESAIN KOMUNIKASI VISUAL	S1	ISBI BANDUNG	501.52
+1167	ANGKLUNG DAN MUSIK BAMBU	D4	ISBI BANDUNG	507.64
+1168	TARI SUNDA	D4	ISBI BANDUNG	513.75
+1169	TELEVISI DAN FILM	D4	ISBI BANDUNG	542.65
+1170	TATA RIAS DAN BUSANA	D4	ISBI BANDUNG	529.39
+1171	KRIYA SENI	D3	ISBI BANDUNG	507.50
+1172	AGRIBISNIS	S1	INSTITUT PERTANIAN BOGOR (IPB)	665.14
+1173	AGRONOMI DAN HORTIKULTURA	S1	INSTITUT PERTANIAN BOGOR (IPB)	656.38
+1174	BIOKIMIA	S1	INSTITUT PERTANIAN BOGOR (IPB)	693.04
+1175	BIOLOGI	S1	INSTITUT PERTANIAN BOGOR (IPB)	673.58
+1176	EKONOMI SUMBERDAYA DAN LINGKUNGAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	667.51
+1177	ILMU DAN TEKNOLOGI KELAUTAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	660.91
+1178	ILMU KOMPUTER	S1	INSTITUT PERTANIAN BOGOR (IPB)	709.84
+1179	SAINS BIOMEDIS	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	563.13
+1180	KIMIA	S1	INSTITUT PERTANIAN BOGOR (IPB)	682.57
+1181	KOMUNIKASI DAN PENGEMBANGAN MASYARAKAT	S1	INSTITUT PERTANIAN BOGOR (IPB)	661.03
+1182	KONSERVASI SUMBERDAYAHUTAN& EKOWISATA	S1	INSTITUT PERTANIAN BOGOR (IPB)	653.09
+1183	MANAJEMEN HUTAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	648.48
+1184	STATISTIKA DAN SAINS DATA	S1	INSTITUT PERTANIAN BOGOR (IPB)	711.18
+1185	TEKNIK PERTANIAN DAN BIOSISTEM	S1	INSTITUT PERTANIAN BOGOR (IPB)	650.94
+1186	TEKNOLOGI HASIL HUTAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	615.29
+1187	TEKNOLOGI INDUSTRI PERTANIAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	675.05
+1188	TEKNOLOGI PANGAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	697.56
+1189	NUTRISI DAN TEKNOLOGI PAKAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	647.50
+1190	TEKNOLOGI PRODUKSI TERNAK	S1	INSTITUT PERTANIAN BOGOR (IPB)	615.71
+1191	TEKNIK SIPIL	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	517.48
+1192	TEKNOLOGI & MANAJEMEN PERIKANAN BUDIDAYA	S1	INSTITUT PERTANIAN BOGOR (IPB)	638.07
+1193	EKONOMI PEMBANGUNAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	674.87
+1194	MANAJEMEN	S1	INSTITUT PERTANIAN BOGOR (IPB)	684.21
+1195	ILMU GIZI	S1	INSTITUT PERTANIAN BOGOR (IPB)	693.89
+1196	EKONOMI SYARIAH	S1	INSTITUT PERTANIAN BOGOR (IPB)	663.31
+1197	MANAJEMEN SUMBERDAYA LAHAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	661.62
+1198	PROTEKSI TANAMAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	650.52
+1199	MANAJEMEN SUMBERDAYA PERAIRAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	651.12
+1200	TEKNOLOGI HASIL PERAIRAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	641.95
+1201	TEKNOLOGI & MANAJEMEN PERIKANAN TANGKAP	S1	INSTITUT PERTANIAN BOGOR (IPB)	650.54
+1202	SILVIKULTUR	S1	INSTITUT PERTANIAN BOGOR (IPB)	643.99
+1203	METEOROLOGI TERAPAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	674.50
+1204	MATEMATIKA	S1	INSTITUT PERTANIAN BOGOR (IPB)	688.97
+1205	FISIKA	S1	INSTITUT PERTANIAN BOGOR (IPB)	654.70
+1206	ILMU KELUARGA DAN KONSUMEN	S1	INSTITUT PERTANIAN BOGOR (IPB)	649.34
+1207	BISNIS	S1	INSTITUT PERTANIAN BOGOR (IPB)	679.67
+1208	TEKNOLOGI HASIL TERNAK	S1	INSTITUT PERTANIAN BOGOR (IPB)	640.43
+1209	AKTUARIA	S1	INSTITUT PERTANIAN BOGOR (IPB)	706.08
+1210	KEDOKTERAN	S1	INSTITUT PERTANIAN BOGOR (IPB)	697.46
+1211	SMART AGRICULTURE	S1	INSTITUT PERTANIAN BOGOR (IPB)	680.51
+1212	KOMUNIKASI DIGITAL DAN MEDIA	D4	INSTITUT PERTANIAN BOGOR (IPB)	615.19
+1213	KOMUNIKASI DIGITAL DAN MEDIA (KAMPUS SUKABUMI)	D4	INSTITUT PERTANIAN BOGOR (IPB)	615.09
+1214	EKOWISATA	D4	INSTITUT PERTANIAN BOGOR (IPB)	615.00
+1215	EKOWISATA (KAMPUS SUKABUMI)	D4	INSTITUT PERTANIAN BOGOR (IPB)	612.31
+1216	TEKNOLOGI REKAYASA PERANGKAT LUNAK	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.89
+1217	TEKNOLOGI REKAYASA KOMPUTER	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.75
+1218	SUPERVISOR JAMINAN MUTU PANGAN	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.67
+1219	MANAJEMEN INDUSTRI JASA MAKANAN DAN GIZI	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.62
+1220	TEKNOLOGI DAN MANAJEMEN PEMBENIHAN IKAN	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.60
+1221	TEKNOLOGI DAN MANAJEMEN PEMBENIHAN IKAN (KAMPUS SUKABUMI)	D4	INSTITUT PERTANIAN BOGOR (IPB)	612.23
+1222	TEKNOLOGI DAN MANAJEMEN TERNAK	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.46
+1223	TEKNOLOGI DAN MANAJEMEN TERNAK (KAMPUS SUKABUMI)	D4	INSTITUT PERTANIAN BOGOR (IPB)	612.16
+1224	MANAJEMEN AGRIBISNIS	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.33
+1225	MANAJEMEN AGRIBISNIS (KAMPUS SUKABUMI)	D4	INSTITUT PERTANIAN BOGOR (IPB)	612.02
+1226	MANJEMEN INDUSTRI	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.21
+1227	ANALISIS KIMIA	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.11
+1228	TEKNIK DAN MANAJEMEN LINGKUNGAN	D4	INSTITUT PERTANIAN BOGOR (IPB)	614.06
+1229	AKUNTANSI	D4	INSTITUT PERTANIAN BOGOR (IPB)	613.99
+1230	PARAMEDIK VETERINER	D4	INSTITUT PERTANIAN BOGOR (IPB)	613.89
+1231	TEKNOLOGI PRODUKSI DAN MANAJEMEN PERKEBUNAN	D4	INSTITUT PERTANIAN BOGOR (IPB)	613.71
+1232	TEKNOLOGI PRODUKSI DAN PENGEMBANGAN MASYARAKAT PERTANIAN	D4	INSTITUT PERTANIAN BOGOR (IPB)	613.65
+1233	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS SILIWANGI (UNSIL)	568.35
+1234	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS SILIWANGI (UNSIL)	562.93
+1235	AGROTEKNOLOGI	S1	UNIVERSITAS SILIWANGI (UNSIL)	617.45
+1236	AGRIBISNIS	S1	UNIVERSITAS SILIWANGI (UNSIL)	600.78
+1237	TEKNIK ELEKTRO	S1	UNIVERSITAS SILIWANGI (UNSIL)	613.02
+1238	KESEHATAN MASYARAKAT	S1	UNIVERSITAS SILIWANGI (UNSIL)	622.95
+1239	PENDIDIKAN FISIKA	S1	UNIVERSITAS SILIWANGI (UNSIL)	578.50
+1240	GIZI	S1	UNIVERSITAS SILIWANGI (UNSIL)	589.26
+1241	PENDIDIKAN MASYARAKAT	S1	UNIVERSITAS SILIWANGI (UNSIL)	520.76
+1242	PENDIDIKAN EKONOMI	S1	UNIVERSITAS SILIWANGI (UNSIL)	593.70
+1243	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS SILIWANGI (UNSIL)	595.67
+1244	PENDIDIKAN SEJARAH	S1	UNIVERSITAS SILIWANGI (UNSIL)	606.98
+1245	PENDIDIKAN JASMANI	S1	UNIVERSITAS SILIWANGI (UNSIL)	526.78
+1246	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS SILIWANGI (UNSIL)	583.41
+1247	MANAJEMEN	S1	UNIVERSITAS SILIWANGI (UNSIL)	551.80
+1248	AKUNTANSI	S1	UNIVERSITAS SILIWANGI (UNSIL)	619.53
+1249	EKONOMI SYARIAH	S1	UNIVERSITAS SILIWANGI (UNSIL)	595.31
+1250	ILMU POLITIK	S1	UNIVERSITAS SILIWANGI (UNSIL)	575.34
+1251	PENDIDIKAN BAHASA INDONESIA	S1	UNIVERSITAS SILIWANGI (UNSIL)	591.39
+1252	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS SILIWANGI (UNSIL)	582.42
+1253	SISTEM INFORMASI	S1	UNIVERSITAS SILIWANGI (UNSIL)	597.89
+1254	MANAJEMEN MUTU HALAL	S1	UNIVERSITAS SILIWANGI (UNSIL)	530.00
+1255	TEKNOLOGI PANGAN DAN HASIL PERTANIAN	S1	UNIVERSITAS SILIWANGI (UNSIL)	530.23
+1256	PERBANKAN DAN KEUANGAN	D3	UNIVERSITAS SILIWANGI (UNSIL)	520.67
+1257	BIOLOGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	647.45
+1258	KIMIA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	661.20
+1259	MATEMATIKA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	663.97
+1260	FISIKA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	649.12
+1261	MANAJEMEN SUMBERDAYA PERAIRAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	611.49
+1262	AKUAKULTUR	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	621.34
+1263	TEKNIK PERTANIAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	618.54
+1264	TEKNIK ELEKTRO	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	655.93
+1265	PENDIDIKAN DOKTER	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	737.07
+1266	KESEHATAN MASYARAKAT	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	659.09
+1267	KEPERAWATAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	652.34
+1268	TEKNIK GEOLOGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	650.71
+1269	ILMU KELAUTAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	631.64
+1270	AGROTEKNOLOGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	636.64
+1271	AGRIBISNIS	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	645.04
+1272	TEKNOLOGI PANGAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	664.38
+1273	PETERNAKAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	577.86
+1274	KEDOKTERAN GIGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	704.99
+1275	ILMU GIZI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	674.20
+1276	PENDIDIKAN JASMANI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.90
+1277	TEKNIK INDUSTRI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	650.99
+1278	HUKUM	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	633.04
+1279	SOSIOLOGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	630.36
+1280	ADMINISTRASI PUBLIK	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	653.18
+1281	MANAJEMEN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	659.26
+1282	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	655.63
+1283	AKUNTANSI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	662.05
+1284	ILMU KOMUNIKASI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	662.12
+1285	ILMU POLITIK	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	630.83
+1286	SASTRA INDONESIA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	622.88
+1287	SASTRA INGGRIS	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	651.53
+1288	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	658.83
+1289	SASTRA JEPANG	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	598.47
+1290	PENDIDIKAN EKONOMI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	635.93
+1291	PENDIDIKAN BAHASA INDONESIA	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	613.79
+1292	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	652.08
+1293	MIKROBIOLOGI	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	553.86
+1294	TEKNIK MESIN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	518.94
+1295	PENDIDIKAN BAHASA JEPANG	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	563.38
+1296	PROTEKSI TANAMAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	539.65
+1297	STATISTIK	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	596.28
+1298	BIOLOGI TERAPAN	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	601.98
+1299	TEKNIK KOMPUTER	S1	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	527.88
+1300	ADMINISTRASI BISNIS	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	543.67
+1301	BAHASA MANDARIN	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	543.50
+1302	BUDI DAYA IKAN	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.50
+1303	AGRIBISNIS	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.74
+1304	PERENCANAAN SUMBER DAYA LAHAN	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.67
+1305	BAHASA INGGRIS	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.00
+1306	AKUNTANSI	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.15
+1307	BISNIS INTERNASIONAL	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	543.89
+1308	ADMINISTRASI PERKANTORAN	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	543.75
+1309	BUDI DAYA TERNAK	D3	UNIVERSITAS JENDERAL SOEDIRMAN (UNSOED)	544.33
+1310	TEKNIK SIPIL	D3	UNIVERSITAS LAMPUNG (UNILA)	513.67
+1311	TEKNIK SIPIL BANGUNAN GEDUNG	D3	UNIVERSITAS NEGERI PADANG (UNP)	512.50
+1312	KESEHATAN MASYARAKAT	S1	UNIVERSITAS DIPONEGORO (UNDIP)	676.90
+1313	KEDOKTERAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	747.57
+1314	KEPERAWATAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	648.85
+1315	GIZI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	684.63
+1316	MATEMATIKA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	681.14
+1317	BIOLOGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	667.40
+1318	KIMIA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	677.40
+1319	FISIKA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	665.25
+1320	STATISTIKA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	688.74
+1321	MANAJEMEN SUMBERDAYA PERAIRAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	631.71
+1322	AKUAKULTUR	S1	UNIVERSITAS DIPONEGORO (UNDIP)	647.28
+1323	PERIKANAN TANGKAP	S1	UNIVERSITAS DIPONEGORO (UNDIP)	598.04
+1324	ILMU KELAUTAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	649.97
+1325	OCEANOGRAFI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	654.77
+1326	TEKNOLOGI HASIL PERIKANAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	625.62
+1327	TEKNIK MESIN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	677.99
+1328	TEKNIK KIMIA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	697.28
+1329	TEKNIK ELEKTRO	S1	UNIVERSITAS DIPONEGORO (UNDIP)	689.46
+1330	PERENCANAAN WILAYAH DAN KOTA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	678.03
+1331	TEKNIK INDUSTRI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	703.56
+1332	TEKNIK LINGKUNGAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	685.54
+1333	TEKNIK PERKAPALAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	666.44
+1334	TEKNIK GEOLOGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	669.21
+1335	TEKNIK GEODESI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	674.88
+1336	TEKNIK KOMPUTER	S1	UNIVERSITAS DIPONEGORO (UNDIP)	674.66
+1337	PETERNAKAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	589.14
+1338	TEKNOLOGI PANGAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	683.27
+1339	AGROEKOTEKNOLOGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	643.55
+1340	AGRIBISNIS	S1	UNIVERSITAS DIPONEGORO (UNDIP)	640.03
+1341	KEDOKTERAN GIGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	698.77
+1342	BIOTEKNOLOGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	672.68
+1343	SASTRA INDONESIA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	640.46
+1344	SASTRA INGGRIS	S1	UNIVERSITAS DIPONEGORO (UNDIP)	667.49
+1345	SEJARAH	S1	UNIVERSITAS DIPONEGORO (UNDIP)	651.10
+1346	ILMU PERPUSTAKAAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	635.75
+1347	HUKUM	S1	UNIVERSITAS DIPONEGORO (UNDIP)	654.84
+1348	MANAJEMEN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	668.86
+1349	EKONOMI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	681.14
+1350	AKUNTANSI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	690.35
+1351	ADMINISTRASI PUBLIK	S1	UNIVERSITAS DIPONEGORO (UNDIP)	657.28
+1352	ADMINISTRASI BISNIS	S1	UNIVERSITAS DIPONEGORO (UNDIP)	660.20
+1353	ILMU PEMERINTAHAN	S1	UNIVERSITAS DIPONEGORO (UNDIP)	650.64
+1354	ILMU KOMUNIKASI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	675.12
+1355	PSIKOLOGI	S1	UNIVERSITAS DIPONEGORO (UNDIP)	673.61
+1356	BAHASA DAN KEBUDAYAAN JEPANG	S1	UNIVERSITAS DIPONEGORO (UNDIP)	648.91
+1357	HUBUNGAN INTERNASIONAL	S1	UNIVERSITAS DIPONEGORO (UNDIP)	698.76
+1358	ANTROPOLOGI SOSIAL	S1	UNIVERSITAS DIPONEGORO (UNDIP)	636.75
+1359	EKONOMI ISLAM	S1	UNIVERSITAS DIPONEGORO (UNDIP)	641.79
+1360	ADMINISTRASI PUBLIK KAMPUS REMBANG	S1	UNIVERSITAS DIPONEGORO (UNDIP)	566.67
+1361	BISNIS DIGITAL	S1	UNIVERSITAS DIPONEGORO (UNDIP)	553.74
+1362	KESELAMATAN DAN KESEHATAN KERJA	S1	UNIVERSITAS DIPONEGORO (UNDIP)	593.85
+1363	TEKNOLOGI REKAYASA KIMIA INDUSTRI	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.50
+1364	TEKNOLOGI REKAYASA OTOMASI	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.42
+1365	REKAYASA PERANCANGAN MEKANIK	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.33
+1366	TEKNOLOGI REKAYASA KONSTRUKSI PERKAPALAN	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.25
+1367	TEKNIK LISTRIK INDUSTRI	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.19
+1368	PERENCANAAN TATA RUANG DAN PERTANAHAN	D4	UNIVERSITAS DIPONEGORO (UNDIP)	566.08
+1369	AKUNTANSI PERPAJAKAN	D4	UNIVERSITAS DIPONEGORO (UNDIP)	565.89
+1370	MANAJEMEN DAN ADMINISTRASI LOGISTIK	D4	UNIVERSITAS DIPONEGORO (UNDIP)	565.75
+1371	BAHASA ASING TERAPAN	D4	UNIVERSITAS DIPONEGORO (UNDIP)	565.67
+1372	INFORMASI DAN HUMAS	D4	UNIVERSITAS DIPONEGORO (UNDIP)	565.50
+1373	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	659.24
+1374	PENDIDIKAN FISIKA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	641.25
+1375	PENDIDIKAN KIMIA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	642.21
+1376	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	640.83
+1377	PENDIDIKAN TEKNIK BANGUNAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	577.40
+1378	PENDIDIKAN TEKNIK MESIN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	615.17
+1379	PENDIDIKAN TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	629.07
+1380	ILMU KEOLAHRAGAAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	564.71
+1381	MATEMATIKA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	655.54
+1382	FISIKA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	642.69
+1383	KIMIA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	654.00
+1384	BIOLOGI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	646.73
+1385	KESEHATAN MASYARAKAT	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	646.18
+1386	PENDIDIKAN IPA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	639.37
+1387	PENDIDIKAN TEKNIK OTOMOTIF	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	579.21
+1388	TEKNIK KIMIA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	663.10
+1389	TEKNIK MESIN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	644.27
+1390	MANAJEMEN INFORMATIKA	D3	UNIVERSITAS LAMPUNG (UNILA)	513.03
+1391	TEKNIK ELEKTRO	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	654.13
+1392	GIZI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	650.22
+1393	SISTEM INFORMASI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	648.71
+1394	ILMU LINGKUNGAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	637.51
+1395	TEKNIK KOMPUTER	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	654.09
+1396	BIMBINGAN DAN KONSELING	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	615.32
+1397	TEKNOLOGI PENDIDIKAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	636.43
+1398	PENDIDIKAN LUAR SEKOLAH	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	617.39
+1399	PENDIDIKAN PANCASILA & KEWARGANEGARAAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	612.08
+1400	PENDIDIKAN GEOGRAFI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	626.15
+1401	PENDIDIKAN SEJARAH	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	630.61
+1402	PENDIDIKAN JASMANI, KESEHATAN & REKREASI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	562.24
+1403	PENDIDIKAN KEPELATIHAN OLAHRAGA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	564.76
+1404	PENDIDIKAN TATA BOGA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	612.30
+1405	PENDIDIKAN TATA BUSANA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	607.96
+1406	PENDIDIKAN SOSIOLOGI & ANTROPOLOGI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	637.75
+1407	EKONOMI PEMBANGUNAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	648.80
+1408	MANAJEMEN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	649.54
+1409	PSIKOLOGI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	646.30
+1410	GEOGRAFI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	640.43
+1411	ILMU HUKUM	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	630.07
+1412	AKUNTANSI	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	656.41
+1413	SENI RUPA (DKV,LUKIS,PTNG,GRAFIS,GBR KRIYA)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	612.70
+1414	PENDIDIKAN EKONOMI (PENDIDIKAN AKUNTANSI)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	620.12
+1415	PENDIDIKAN EKONOMI (PENDIDIKAN KOPERASI)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	627.80
+1416	PEND. EKONOMI (PEND. ADMIN. PEKANTORAN)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	628.60
+1417	PENDIDIKAN BAHASA DAN SASTRA INDONESIA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	613.30
+1418	PENDIDIKAN BAHASA INGGRIS	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	638.90
+1419	PENDIDIKAN BAHASA PRANCIS	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	601.72
+1420	PENDIDIKAN SENI RUPA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	582.64
+1421	SASTRA INDONESIA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	622.51
+1422	SASTRA INGGRIS	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	646.38
+1423	SASTRA PRANCIS	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	636.85
+1424	ILMU SEJARAH	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	619.29
+1425	SASTRA JAWA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	561.31
+1426	PENDIDIKAN BAHASA DAN SASTRA JAWA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	510.90
+1427	P. SENI DRAMA, TARI & MUSIK (P. SENI TARI)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	559.84
+1428	P. SENI DRAMA, TARI & MUSIK (P. SENI MUSIK)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	578.93
+1429	PENDIDIKAN BAHASA JEPANG	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	628.33
+1430	PENDIDIKAN BAHASA ARAB	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	614.40
+1431	PENDIDIKAN GURU SEKOLAH DASAR	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	618.36
+1432	PEND.GURU PEND. ANAK USIA DINI (PGPAUD)	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	612.84
+1433	PENDIDIKAN TATA KECANTIKAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	615.95
+1434	PENDIDIKAN BAHASA MANDARIN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	608.52
+1435	ILMU POLITIK	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	625.33
+1436	PENDIDIKAN JASMANI SEKOLAH DASAR	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	556.98
+1437	PENDIDIKAN ILMU PENGETAHUAN SOSIAL	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	621.94
+1438	PENDIDIKAN KESEJAHTERAAN KELUARGA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	599.74
+1439	STATISTIKA DAN SAINS DATA	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	626.97
+1440	EKONOMI DAN KEUANGAN ISLAM	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	598.55
+1441	KEDOKTERAN	S1	UNIVERSITAS NEGERI SEMARANG (UNNES)	692.18
+1442	DESAIN KOMUNIKASI VISUAL	D3	UNIVERSITAS NEGERI SEMARANG (UNNES)	510.67
+1443	STATISTIKA TERAPAN DAN KOMPUTASI	D3	UNIVERSITAS NEGERI SEMARANG (UNNES)	510.75
+1444	MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	642.84
+1445	FISIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	635.98
+1446	KIMIA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	641.67
+1447	BIOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	577.33
+1448	TEKNIK INDUSTRI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	650.07
+1449	PENDIDIKAN MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	604.07
+1450	PENDIDIKAN FISIKA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	566.80
+1451	PENDIDIKAN KIMIA	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	567.21
+1452	PENDIDIKAN BIOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	572.08
+1453	ILMU PERPUSTAKAAN (IP)	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	618.50
+1454	PSIKOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	627.75
+1455	SOSIOLOGI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	613.87
+1456	ILMU KOMUNIKASI	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	644.38
+1457	SASTRA INGGRIS (SI)	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	632.89
+1458	ILMU HUKUM (IH)	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	620.92
+1459	ILMU KESEJAHTERAAN SOSIAL (IKS)	S1	UNIVERSITAS ISLAM NEGERI SUNAN KALIJAGA (UIN YOGYA)	600.90
+1460	MANAJEMEN INFORMATIKA	D3	UNIVERSITAS SRIWIJAYA (UNSRI)	508.33
+1461	MATEMATIKA	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	596.78
+1462	BIOLOGI	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	610.18
+1463	KIMIA	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	610.52
+1464	FISIKA	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	607.69
+1465	PENDIDIKAN DOKTER	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	720.21
+1466	PENDIDIKAN IPS	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	542.57
+1467	BAHASA DAN SASTRA INGGRIS	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	577.39
+1468	PSIKOLOGI	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	608.43
+1469	MANAJEMEN	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	608.87
+1470	AKUNTANSI	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	613.22
+1471	PERPUSTAKAAN DAN ILMU INFORMASI	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	581.68
+1472	TEKNIK LINGKUNGAN	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	540.67
+1473	TEKNIK MESIN	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	499.40
+1474	TEKNIK ELEKTRO	S1	UNIVERSITAS ISLAM NEGERI MALANG (UIN MALANG)	531.35
+        `; // <<< PASTE 1474 DATA KAMU DI SINI
+
+        // =====================================================================
+        // 2. DICTIONARY 12 RUMPUN ILMU BARU
+        // =====================================================================
+        const RUMPUN_KATEGORI = {
+            'Kesehatan & Medis': ['KEDOKTERAN', 'DOKTER', 'GIGI', 'FARMASI', 'GIZI', 'KEPERAWATAN', 'KEBIDANAN', 'FISIOTERAPI', 'KESEHATAN', 'MEDIS', 'OKUPASI', 'HIGIENE', 'VETERINER', 'APOTEKER', 'BIOMEDIS'],
+            'Matematika & Sains (MIPA)': ['MATEMATIKA', 'FISIKA', 'BIOLOGI', 'STATISTIKA', 'AKTUARIA', 'METEOROLOGI', 'ASTRONOMI', 'SAINS', 'FMIPA', 'SITH'],
+            // ELEKTRO dimasukkan ke IT dan Mesin
+            'Ilmu Komputer & IT': ['INFORMATIKA', 'SISTEM INFORMASI', 'KOMPUTER', 'STEI', 'TELEKOMUNIKASI', 'SAINS DATA', 'ROBOTIKA', 'GAME', 'INTERNET', 'KECERDASAN', 'SIBER', 'SOFTWARE', 'MULTIMEDIA', 'ELEKTRO'],
+            'Teknik & Infrastruktur': ['SIPIL', 'ARSITEKTUR', 'SAPPK', 'PERENCANAAN WILAYAH', 'PWK', 'LINGKUNGAN', 'INFRASTRUKTUR', 'BANGUNAN', 'GEOMATIKA', 'TATA RUANG', 'FTSL', 'SURVEI', 'PEMETAAN'],
+            'Teknik Mesin, Elektro & Manufaktur': ['MESIN', 'ELEKTRO', 'INDUSTRI', 'DIRGANTARA', 'AERONAUTIKA', 'MATERIAL', 'MANUFAKTUR', 'OTOMOTIF', 'ALAT BERAT', 'MEKANIK', 'FTMD', 'MEKATRONIKA', 'INSTRUMENTASI'],
+            'Ilmu Kebumian & Energi': ['KIMIA', 'PERTAMBANGAN', 'PERMINYAKAN', 'GEOLOGI', 'GEOFISIKA', 'NUKLIR', 'GEODESI', 'SUMBER DAYA AIR', 'ENERGI', 'PEMBANGKIT', 'FTTM', 'FITB', 'METALURGI', 'OCEANOGRAFI'],
+            'Agrokompleks & Kemaritiman': ['AGRO', 'AGRI', 'PERTANIAN', 'PETERNAKAN', 'HUTAN', 'TANAH', 'HORTIKULTURA', 'TERNAK', 'PLANTUN', 'HAMA', 'KEBUN', 'PENYULUH', 'KELAUTAN', 'PERIKANAN', 'KAPAL', 'AKUAKULTUR', 'HIDROGRAFI', 'NAUTIKA', 'PERAIRAN', 'BAHARI', 'PANGAN'],
+            'Ekonomi, Bisnis & Manajemen': ['AKUNTANSI', 'MANAJEMEN', 'EKONOMI', 'BISNIS', 'PAJAK', 'PERBANKAN', 'ADMINISTRASI NIAGA', 'KEUANGAN', 'PEMASARAN', 'LOGISTIK', 'PARIWISATA', 'ASURANSI', 'PERDAGANGAN', 'SBM'],
+            'Sosial, Hukum & Humaniora': ['HUKUM', 'HUBUNGAN INTERNASIONAL', 'PSIKOLOGI', 'KOMUNIKASI', 'SOSIOLOGI', 'POLITIK', 'PEMERINTAHAN', 'KRIMINOLOGI', 'SOSIAL', 'ADMINISTRASI PUBLIK', 'ADMINISTRASI NEGARA', 'SEJARAH', 'ANTROPOLOGI', 'FILSAFAT', 'PERPUSTAKAAN', 'ARSIP', 'MASYARAKAT', 'HUMAS', 'JURNALISTIK'],
+            'Bahasa, Sastra & Budaya': ['SASTRA', 'BAHASA', 'LINGUISTIK', 'BUDAYA', 'JAWA', 'INGGRIS', 'ARAB', 'MANDARIN', 'JEPANG', 'PRANCIS', 'JERMAN', 'KOREA', 'SUNDA', 'RUSIA', 'BELANDA', 'TIONGKOK'],
+            'Seni, Desain & Media': ['SENI', 'DESAIN', 'DKV', 'INTERIOR', 'FILM', 'KRIYA', 'TARI', 'MUSIK', 'TATA RIAS', 'BUSANA', 'BOGA', 'GRAFIS', 'MEDIA', 'TELEVISI', 'BROADCASTING', 'PRODUK', 'KARAWITAN', 'TEATER', 'ANIMASI', 'FSRD'],
+            'Pendidikan & Keguruan': ['PENDIDIKAN', 'PGSD', 'PAUD', 'KEPELATIHAN', 'BIMBINGAN', 'GURU', 'PEDAGOGI', 'KEOLAHRAGAAN']
+        };
+
+        const RUMPUN_CLASS_MAP = {
+            'Kesehatan & Medis': 'badge-medis',
+            'Matematika & Sains (MIPA)': 'badge-sains',
+            'Ilmu Komputer & IT': 'badge-it',
+            'Teknik & Infrastruktur': 'badge-infra',
+            'Teknik Mesin, Elektro & Manufaktur': 'badge-mesin',
+            'Ilmu Kebumian & Energi': 'badge-bumi',
+            'Agrokompleks & Kemaritiman': 'badge-agro',
+            'Ekonomi, Bisnis & Manajemen': 'badge-ekbis',
+            'Sosial, Hukum & Humaniora': 'badge-soshum',
+            'Bahasa, Sastra & Budaya': 'badge-bahasa',
+            'Seni, Desain & Media': 'badge-seni',
+            'Pendidikan & Keguruan': 'badge-pendidikan'
+        };
+
+        let parsedData = [];
+        let ptnList = new Set();
+
+        function getClusters(prodiName) {
+            let matched = [];
+            let upperProdi = prodiName.toUpperCase();
+            
+            // EXCEPTION HANDLER (Mencegah Pendidikan Dokter masuk ke Pendidikan Keguruan)
+            let checkProdi = upperProdi;
+            if (upperProdi.includes('PENDIDIKAN DOKTER') || upperProdi.includes('PENDIDIKAN KLINIS') || upperProdi.includes('PENDIDIKAN DOKTER GIGI')) {
+                // Buang kata "PENDIDIKAN" agar murni dianalisis sebagai Medis
+                checkProdi = checkProdi.replace('PENDIDIKAN', ''); 
+            }
+
+            for (const [rumpun, keywords] of Object.entries(RUMPUN_KATEGORI)) {
+                for (const kw of keywords) {
+                    const regex = new RegExp(`\\b${kw}\\b`, 'i');
+                    if (checkProdi.match(regex) || checkProdi.includes(kw)) {
+                        matched.push({ name: rumpun, class: RUMPUN_CLASS_MAP[rumpun] });
+                        break; 
+                    }
+                }
+            }
+            return matched;
+        }
+
+        function initApp() {
+            const regex = /(\d+)(.*?)(S1|D4|D3)(.*?)(\d{2,3}\.\d{2})/g;
+            let match;
+            
+            while ((match = regex.exec(rawDataString)) !== null) {
+                const ptnName = match[4].trim();
+                const prodiName = match[2].trim();
+                parsedData.push({
+                    no: parseInt(match[1]),
+                    prodi: prodiName,
+                    jenjang: match[3].trim(),
+                    ptn: ptnName,
+                    passingGrade: parseFloat(match[5]),
+                    clusters: getClusters(prodiName)
+                });
+                ptnList.add(ptnName);
+            }
+
+            const ptnSelect = document.getElementById('ptn');
+            Array.from(ptnList).sort().forEach(ptn => {
+                let opt = document.createElement('option');
+                opt.value = ptn;
+                opt.innerHTML = ptn;
+                ptnSelect.appendChild(opt);
+            });
+        }
+
+        // Event Listener untuk Filter PTN
+        document.getElementById('ptn').addEventListener('change', function() {
+            const selectedPtn = this.value;
+            const prodiSelect = document.getElementById('prodi');
+            prodiSelect.innerHTML = '<option value="SEMUA">-- Semua Program Studi --</option>';
+            
+            if (selectedPtn === "SEMUA") {
+                prodiSelect.disabled = true;
+                prodiSelect.classList.add('bg-slate-100');
+                prodiSelect.innerHTML = '<option value="SEMUA">-- Pilih PTN terlebih dahulu --</option>';
+                return;
+            }
+
+            prodiSelect.disabled = false;
+            prodiSelect.classList.remove('bg-slate-100');
+
+            const filteredProdi = parsedData.filter(d => d.ptn === selectedPtn);
+            const uniqueProdi = [...new Set(filteredProdi.map(item => item.prodi))].sort();
+
+            uniqueProdi.forEach(prodi => {
+                let opt = document.createElement('option');
+                opt.value = prodi;
+                opt.innerHTML = prodi;
+                prodiSelect.appendChild(opt);
+            });
         });
-    }
-    
-    searchBtn.addEventListener("click", performSearch);
-    selectAllBtn.addEventListener("click", () => {
-        document.querySelectorAll(".ptn-checkbox").forEach(cb => cb.checked = true);
-        updateProdiListBySelectedPTN();
-    });
-    clearPtnBtn.addEventListener("click", () => {
-        document.querySelectorAll(".ptn-checkbox").forEach(cb => cb.checked = false);
-        updateProdiListBySelectedPTN();
-    });
-    
-    loadPTNs();
-</script>
+
+        // Event Listener Form Submit
+        document.getElementById('rekomendasiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const skorInput = document.getElementById('skor').value;
+            const skor = skorInput ? parseFloat(skorInput) : Infinity; 
+            
+            const jenjang = document.getElementById('jenjang').value;
+            const targetPtn = document.getElementById('ptn').value;
+            const targetProdi = document.getElementById('prodi').value;
+            const isModeSerumpun = document.getElementById('cariSerumpun').checked;
+
+            let targetClustersNames = [];
+            let targetWords = [];
+            
+            if (targetProdi !== "SEMUA") {
+                const prodiData = parsedData.find(d => d.prodi === targetProdi);
+                if(prodiData) {
+                    targetClustersNames = prodiData.clusters.map(c => c.name);
+                }
+                targetWords = targetProdi.split(/[\s\-()]+/).filter(w => w.length > 3).map(w => w.toUpperCase());
+            }
+
+            let result = [];
+
+            parsedData.forEach(item => {
+                if (skor < item.passingGrade) return;
+                if (jenjang !== "SEMUA" && item.jenjang !== jenjang) return;
+
+                let relevanceScore = 0;
+                let isMatch = false;
+
+                if (targetProdi !== "SEMUA") {
+                    if (isModeSerumpun) {
+                        if (item.prodi === targetProdi) {
+                            relevanceScore = 100;
+                            isMatch = true;
+                        } else if (targetClustersNames.length > 0) {
+                            const itemClusterNames = item.clusters.map(c => c.name);
+                            const intersect = targetClustersNames.filter(c => itemClusterNames.includes(c));
+                            if (intersect.length > 0) {
+                                relevanceScore = 50 + (intersect.length * 10);
+                                isMatch = true;
+                            }
+                        } else {
+                            const matchWordCount = targetWords.filter(w => item.prodi.toUpperCase().includes(w)).length;
+                            if (matchWordCount > 0) {
+                                relevanceScore = 10 * matchWordCount;
+                                isMatch = true;
+                            }
+                        }
+                    } else {
+                        if (item.ptn === targetPtn && item.prodi === targetProdi) {
+                            relevanceScore = 100;
+                            isMatch = true;
+                        }
+                    }
+                } else {
+                    if (targetPtn !== "SEMUA") {
+                        if (item.ptn === targetPtn) {
+                            relevanceScore = 50;
+                            isMatch = true;
+                        }
+                    } else {
+                        relevanceScore = 10;
+                        isMatch = true;
+                    }
+                }
+
+                if (isMatch) {
+                    result.push({ ...item, relevanceScore });
+                }
+            });
+
+            // Sorting: Berdasarkan Relevansi, lalu urutkan dari grade tertinggi (paling bergengsi)
+            result.sort((a, b) => {
+                if (b.relevanceScore !== a.relevanceScore) {
+                    return b.relevanceScore - a.relevanceScore;
+                }
+                return b.passingGrade - a.passingGrade;
+            });
+
+            renderTable(result, skor);
+        });
+
+        function renderTable(data, currentScore) {
+            const container = document.getElementById('resultContainer');
+            const tbody = document.getElementById('resultBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            container.classList.remove('hidden');
+            tbody.innerHTML = '';
+            document.getElementById('countResult').innerText = data.length;
+
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.parentElement.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                tbody.parentElement.classList.remove('hidden');
+
+                data.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-blue-50 transition duration-150 border-b border-slate-100";
+                    
+                    let clusterHTML = '';
+                    if (item.clusters.length > 0) {
+                        clusterHTML = '<div class="mt-1 flex flex-wrap gap-1">';
+                        item.clusters.forEach(c => {
+                            clusterHTML += `<span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded border ${c.class}">${c.name}</span>`;
+                        });
+                        clusterHTML += '</div>';
+                    }
+
+                    // Logika pewarnaan Passing Grade
+                    let pgClass = "text-slate-700 bg-slate-50 border-slate-200"; 
+                    let statusIcon = "";
+                    let titleText = "Data Passing Grade (Tanpa Perbandingan Skor)";
+
+                    if (currentScore !== Infinity) {
+                        const margin = currentScore - item.passingGrade;
+                        pgClass = "text-green-600 bg-green-50 border-green-200"; 
+                        statusIcon = "✅ ";
+                        titleText = `Sangat Aman | Margin: +${margin.toFixed(2)} poin`;
+
+                        if (margin < 5) {
+                            pgClass = "text-red-600 bg-red-50 border-red-200"; 
+                            statusIcon = "⚠️ ";
+                            titleText = `Rawan / Pas-pasan | Margin: +${margin.toFixed(2)} poin`;
+                        } else if (margin < 15) {
+                            pgClass = "text-orange-600 bg-orange-50 border-orange-200"; 
+                            statusIcon = "🔸 ";
+                            titleText = `Cukup Aman | Margin: +${margin.toFixed(2)} poin`;
+                        }
+                    }
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 text-center font-medium text-slate-500">${index + 1}</td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-blue-900">${item.prodi}</div>
+                            ${clusterHTML}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded bg-slate-100 text-slate-600 border border-slate-200">${item.jenjang}</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-700 font-medium text-sm">${item.ptn}</td>
+                        <td class="px-6 py-4 text-center cursor-help">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-bold rounded-full border ${pgClass}" title="${titleText}">
+                                <span>${statusIcon}${item.passingGrade.toFixed(2)}</span>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
 </body>
 </html>
